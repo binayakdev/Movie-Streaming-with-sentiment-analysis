@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<nav>
+    <div class="navbar p-3">
+        <div class="nav-title">
+            <h3>Change my password</h3>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<div class="container-fluid ml-5">
+    <div class="row">
+        <div class="col-6">
+            <div class="content mt-5">
+                <div class="title">
+                    <h3>Password reset sent</h3>
+                </div>
+                <div class="para">
+                    <p>We've emailed you instructions for setting your password if an account exists with the email you
+                        entered. You should receive them shortly. If you don't receive email please make sure you've
+                        entered the address you registered with, and check your spam folder.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

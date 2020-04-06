@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>You have been loggged out</h2>
+<div class="border-top pt-3">
+    <small class="text-muted"><a class="ml-2" href="{% url 'admin-login' %}"><i class="fas fa-sign-in-alt"></i> Log in
+            Again</a></small>
+</div>
+<div class="mt-3">
+    <small class="text-muted"><a class="ml-2" href="/"><i class="fas fa-home"></i> Go Home</a></small>
+</div>
+{% endblock %}

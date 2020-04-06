@@ -1,0 +1,66 @@
+{% extends 'admin-base.html' %}
+
+{% load static %}
+
+{% block style %}
+<style>
+    form {
+        border: 2px solid rgb(30, 53, 123);
+    }
+
+    .header {
+        background: rgb(30, 53, 123);
+        color: #fff;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .form-footer {
+        border: 2px solid rgb(30, 53, 123);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 login-body mt-5">
+            {% if messages %}
+            {% for message in messages%}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="p-1 header">
+                <h2>Admin Panel Login</h2>
+            </div>
+            <form class="login-form p-3" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group text-center">
+                    <button class="btn btn-outline-info" type="submit">Login</button>
+                </div>
+            </form>
+            <div class="form-footer mt-2">
+                <div class="p-3">
+                    <small class="text-muted">Forgot Password? <a class="ml-2" href="{% url 'password_reset' %}">Reset
+                            Password</a></small><br>
+                    <small class="text-muted">Create a new Admin <a class="ml-2"
+                            href="{% url 'admin-register' %}">Register
+                            Now</a></small>
+                    <small class="text-muted"><a class="ml-5" href="/"><i class="fas fa-home"></i> Go
+                            Home</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

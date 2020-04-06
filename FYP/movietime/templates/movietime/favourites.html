@@ -1,0 +1,293 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'movietime/css/movies.css' %}">
+<link rel="stylesheet" href="{% static 'movietime/css/movies_ext.css' %}">
+<link rel="stylesheet" href="{% static 'movietime/css/favourites.css' %}">
+{% if not movies %}
+<link href="{% static 'admin/css/sb-admin-2.min.css' %}" rel="stylesheet">
+{% endif %}
+<style>
+    .showcase {
+        width: 100%;
+        min-height: 110vh;
+        position: relative;
+        background: linear-gradient(rgba(30, 27, 38, .8), rgba(30, 27, 38, .5)),
+        url("{% static 'movietime/images/milky-way-illustration.jpg' %}") center center/cover;
+        background-attachment: fixed;
+    }
+
+    .movie-navbar {
+        border-radius: 10px;
+        margin-bottom: 2%;
+    }
+
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 10px;
+        z-index: 100;
+        width: 30%;
+    }
+
+    .modal-title {
+        font-size: 1.3em;
+        font-family: 'Roboto', sans-serif;
+        color: rgb(29, 29, 29);
+    }
+
+    .modal-footer {
+        padding: 5%;
+        background: rgb(233, 233, 233);
+    }
+
+    .modal-footer button {
+        background: rgb(0, 174, 255);
+        border-bottom: 2px solid rgb(0, 135, 197);
+        width: 100% !important;
+        padding: 3% 0;
+        color: white;
+        font-size: 1.5em;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .features ul li {
+        list-style: none;
+        padding: 2%;
+        color: rgb(146, 146, 146);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+</style>
+{% endblock%}
+
+{% block content %}
+
+{% if movies %}
+<!-- Django messages section -->
+{% if messages %}
+{% for message in messages %}
+{% if message.extra_tags == '500 Internal Server Error' %}
+<div class="toast" role="alert" data-autohide="false" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <div><i style="color: red;" class="fas fa-exclamation-triangle mr-2"></i></div>
+        <strong class="mr-auto">{{message.extra_tags}}</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        {{message}}
+    </div>
+</div>
+{% else %}
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{message.extra_tags}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><i style="color: rgb(0, 153, 255);" class="fas fa-info-circle"></i> {{message}}</p>
+                <div>
+                    <h1 style="color: gray; font-weight: bold;"><span><img style="width: 100px;" class="img-responsive"
+                                src="{% static 'images/logo.png' %}" alt="" /></span> MOVIE TIME <i style="color: gold;"
+                            class="fas fa-unlock-alt"></i></h1>
+                </div>
+                <div style="padding:0 2%;" class="mt-2 features">
+                    <ul>
+                        <li><i class="fas fa-tv mr-2"></i> Get unlimited access to the MovieTime streaming library</li>
+                        <hr>
+                        <li><i class="fas fa-file-alt mr-2"></i> Check movie trailers, cast, directors, ratings, and
+                            other
+                            info.</li>
+                        <hr>
+                        <li><i class="fas fa-clock mr-2"></i> Watch your favourite movies anytime - anywhere.</li>
+                        <hr>
+                        <li><i class="far fa-chart-bar mr-2"></i> Get Sentiment Analysis tool to analyze all the
+                            exclusive
+                            movies.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-3" style="width: 100%; display: inline-block;"><a
+                        href="{% url 'profile' %}#subscription"><button type="button" class="btn btn-primary"><i
+                                style="color: rgb(83, 201, 255)" class="fas fa-gamepad"></i>
+                            Upgrade
+                            Account for
+                            only $15/mo</button></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+<!-- Add to favourites notification box -->
+<div id="fav-notify">
+    <p id="fav-notify-msg"></p>
+</div>
+
+<div class="container">
+    <h2 class="favourite-title">My List</h2>
+    <div class="row">
+        <div id="overlay">
+        </div>
+        {% for movie in movies %}
+        <div class="container overview">
+            <div class="cellphone-container">
+                <div class="movie">
+                    <div class="menu"><i class="fas fa-times"></i></div>
+                    <div class="movie-img">
+                        <p class="youtube-token" style="display:none">{{movie.y_token}}</p>
+                        <iframe width="100%" height="100%" src="" frameborder="0" scrolling="no" allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="text-movie-cont">
+                        <div class="mr-grid">
+                            <div class="col1 col-11">
+                                <h1 style="text-align: start;">{{movie.title}}</h1>
+                                <ul class="movie-gen pt-2">
+                                    <li>{{movie.duration}} /</li>
+                                    <li>{% for genre in movie.genre.values %}
+                                        <strong>{{ genre.genre_name }}{% if not forloop.last %}, {% endif %}</strong>
+                                        {% endfor %}</li>
+                                </ul>
+                                <div class="rating d-flex justify-content-end">
+                                    <i class="fa fa-star pt-1" style="color: rgb(253,216, 53);"></i><span
+                                        class="pl-2 text-white">{{movie.rating}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mr-grid summary-row">
+                            <div class="col2">
+                                <h5>SUMMARY</h5>
+                            </div>
+                        </div>
+                        <div class="mr-grid">
+                            <div class="col1">
+                                <p class="movie-description">
+                                    <span class="summary">{{movie.summary}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mr-grid actors-row">
+                            <div class="col1">
+                                <p class="movie-actors">
+                                    <span class="casts">{{movie.cast}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        {% if user.is_authenticated and user.is_staff == False and user.is_admin == False %}
+                        <div class="mr-grid action-row">
+                            <div class="col2">
+                                <div class="watch-btn"><a href="/watch_movies/movie_id={{movie.id}}">
+                                        <h3>
+                                            <i class="fas fa-play"></i> WATCH MOVIE
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col6 action-btn">
+                                <a href="https://www.imdb.com/find?ref_=nv_sr_fn&q={{movie.title}}&s=all">
+                                    <i data-toggle="tooltip" title="Show in IMDB" style="color: yellow;"
+                                        class="fab fa-imdb"></i></a>
+                            </div>
+                            <div class="col6 action-btn"><a href="/sentiment/analysis/movie_id={{movie.id}}"><i
+                                        data-toggle="tooltip" title="Perform Sentiment Analysis"
+                                        style="color: whitesmoke;" class="fas fa-laugh-beam"></i></a>
+                            </div>
+                            <div class="col6 action-btn justify-content-end">
+                                {% if movie.id not in favourites %}
+                                <div><i data-href="{% url 'favourite_movie' id=movie.id %}" data-toggle="tooltip"
+                                        title="Add to Favourites" style="color: rgb(32, 162, 242);"
+                                        class="fav-add-icon far fa-bookmark"></i>
+                                </div>
+                                {% else %}
+                                <div><i data-href="{% url 'favourite_movie' id=movie.id %}" data-toggle="tooltip"
+                                        title="Remove from Favourites" style="color: rgb(32, 162, 242);"
+                                        class="fav-add-icon fas fa-bookmark"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 col-lg-3 col-xl-2 col-md-3 movie-container">
+            <div class="movie clickable" class="mr-0">
+                <img class="img-resonsive" src="{{ movie.poster.url }}" alt="Video" height="220" width="150">
+                <p class="video-url" style="display: none;">{{ movie.video.url }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        <span class="current">
+            Page {{ movies.number }} of {{ movies.paginator.num_pages }}.
+        </span>
+        <br>
+        {% if movies.has_previous %}
+        <a href="?page=1"><button>First</button></a>
+        <a href="?page={{ movies.previous_page_number }}"><button><i class="fas fa-angle-double-left"></i></button>
+            {% endif %}
+            {% if movies.has_next %}
+            <a href="?page={{ movies.next_page_number }}"><button><i class="fas fa-angle-double-right"></i></button></a>
+            <a href="?page={{ movies.paginator.num_pages }}"><button>Last</button></a>
+            {% endif %}
+    </span>
+</div>
+{% else %}
+<div class="container">
+    <div class="text-center p-5" style="background: white; border-radius: 10px;">
+        <div class="mb-5 error mx-auto" data-text="Oops">Oops</div>
+        <p class="lead text-gray-800 mb-5">There are no movies in your list</p>
+        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+        <a href="/">&larr; Back to browsing movies</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'movietime/js/movie.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Modal").modal();
+        $('.toast').toast('show');
+    });
+
+    var bookmark_icon = document.getElementsByClassName("fav-add-icon");
+    var movie = document.getElementsByClassName("movie-container");
+
+    for (var i = 0; i < bookmark_icon.length; i++) {
+        (function (index) {
+            bookmark_icon[index].addEventListener('click', function () {
+                if (bookmark_icon[index].classList.contains("far")) {
+                    console.log("Yes");
+                    bookmark_icon[index].classList.remove("far");
+                    bookmark_icon[index].classList.add("fas");
+                    bookmark_icon[index].setAttribute("title", "Remove from Favourites");
+                    video = document.getElementsByClassName('overview')[index];
+                    video.style.display = "none";
+                    document.getElementById('overlay').style.display = "none";
+                    document.getElementsByTagName('iframe')[index].src = "";
+                    movie[index].style.display = "none";
+                }
+            }, false);
+        })(i)
+    }
+</script>
+{% endblock %}

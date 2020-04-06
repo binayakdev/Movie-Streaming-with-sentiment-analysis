@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{% block style %}
+<style>
+    body {
+        background: #fff;
+    }
+
+    .navbar {
+        background: rgb(27, 27, 27);
+    }
+
+    .navbar-brand {
+        height: 70px;
+        width: 70px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+            <div class="mb-3 text-center">
+                <div class="head">
+                    <h4>Update your profile</h4>
+                </div>
+            </div>
+            {% if messages %}
+            {% for message in messages%}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="content-section border p-3">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group text-center">
+                        <button class="btn btn-outline-info" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+p {
+    margin: 0;
+}
+
+a {
+    font-weight: 700;
+}
+
+.plan-review-wrapper {
+    min-height: 70vh;
+    height: auto;
+    width: 30%;
+    padding: 25px 10px;
+    color: rgb(56, 56, 56);
+}
+
+@media (max-width: 500px)
+{
+    .plan-review-wrapper {
+        width: 90%;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 700px)
+{
+    .plan-review-wrapper {
+        width: 60%;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1200px)
+{
+    .plan-review-wrapper {
+        width: 40%;
+    }
+}
+ 
+.plan-header h4{
+    font-weight: 600; 
+}
+
+.plain-description p {
+    font-weight: 600;
+}
+
+.plan-summary {
+    background: rgb(244, 244, 244);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.plan-summary .plan-type {
+    color: black;
+    font-weight: 700;
+}
+
+.plan-summary .plan-price {
+    color: gray;
+}
+
+.credit-card {
+    color: rgb(47, 189, 255);
+}
+
+.plan-description p, .registration-info p{
+    font-weight: 500;
+}
+
+.btns button {
+    width: 100%;
+    padding: 10px 0;
+    border:none;
+    border-radius: 5px;
+}
+
+.btns button:hover {
+    filter: brightness(1.1);
+}
+
+.btns .continue {
+    background: rgb(229, 9, 20);
+    color: white;
+}
+
+.btns .cancel {
+    background: rgb(214, 214, 214);
+}

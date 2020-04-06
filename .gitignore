@@ -1,0 +1,4 @@
+# sentiment model folder
+*.gz
+*.jar
+*.sav

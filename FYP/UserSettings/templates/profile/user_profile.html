@@ -1,0 +1,393 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'UserSettings/css/user_profile.css' %}">
+<style>
+    .navbar {
+        background: rgb(27, 27, 27);
+    }
+
+    .navbar-brand {
+        height: 70px;
+        width: 70px;
+    }
+
+    .settings {
+        text-align: end;
+    }
+
+    @media (max-width: 500px) {
+
+        .profile-head {
+            flex-direction: column !important;
+            text-align: center;
+        }
+
+        .profile-head img {
+            display: block;
+            margin-left: 50%;
+            transform: translateX(-50%);
+        }
+
+
+        .password {
+            text-align: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .settings {
+            margin-top: 10px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+    <div class="main-container ">
+        {% if messages %}
+        {% for message in messages%}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="container">
+            <div class="heading">
+                <div class="text-center" id="main-heading">
+                    <h2>Personal info</h2>
+                    <p>Basic info, like your name and photo. Your account details and finally your subscription
+                        information.</p>
+                </div>
+            </div>
+            <div class="profile-details">
+                <!-- Profile Details -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">My Profile</h5>
+                            <p><a href="{% url 'edit_profile' %}">Edit <i class="fas fa-edit"></i></a></p>
+                        </div>
+                        <p class="card-text">
+                            See and update your basic profile information here.
+                        </p>
+                        <div class="mt-3 card-info">
+                            <div class="row">
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                    <div class="row pt-3">
+                                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                            <p class="info-title">PHOTO</p>
+                                        </div>
+                                        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                                            <p style="color: rgb(141, 140, 140);" class="info-desc"><span><i
+                                                        style="color: rgb(0, 140, 255);"
+                                                        class="fa fa-info-circle"></i></span> A photo
+                                                helps personalize your account</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <img class="mr-0 rounded-circle img-responsive" style="object-fit: cover;"
+                                        src="{{user.avatar.url}}" height="50" width="50" alt="Profile">
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                    <p class="info-title">NAME</p>
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                    <p class="info-desc">{{user.first_name}}&nbsp;{{user.last_name}}</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                    <p class="info-title">USERNAME</p>
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                    <p class="info-desc">{{user.username}}</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                    <p class="info-title">EMAIL</p>
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                    <p class="info-desc">{{user.email}}</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                    <p class="info-title">BIO</p>
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                    <p class="info-desc">{{user.bio}}</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-xl-9 col-lg-9 col-md-7 col-sm-12 col-xs-12">
+                                    <div class="row p-0">
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                            <p class="info-title">PASSWORD</p>
+                                        </div>
+                                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                            <p class="info-desc">
+                                                **********
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12" style="text-align: end;">
+                                    <p class="text-center"><a href="{% url 'change_password' %}">Change Password</a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Details End -->
+
+                <!-- Account Detailss -->
+                <div class="mt-5" id="account-details">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">Account Details</h5>
+                                <p><a href="{% url 'settings_profile' %}">Settings <i class="fas fa-cog"></i></a></p>
+                            </div>
+                            <p class="card-text">
+                                See your activitiy and status.
+                            </p>
+
+                            <div class="mt-5 card-info">
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">DATE JOINED</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{user.date_joined}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">LAST LOGIN</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{user.last_login}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">ACCOUNT STATUS</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">
+                                            {%if user.is_active %}
+                                            <i class="fas fa-check-circle" style="color: rgb(14, 129, 89);"></i>
+                                            {% else %}
+                                            <i class="fas fa-times-circle" style="color: red;"></i>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Account details end -->
+
+                <!-- Subscription Details -->
+                <div id="subscription" class="mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if stripe_error is None %}
+                            {% if plan_exists %}
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">My Subscription</h5>
+                            </div>
+                            <p class="card-text">
+                                Check info on your subscription. Your subscription expiry date, status, cancellation
+                                status and more.
+                            </p>
+                            <div class="mt-5 card-info">
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">BILLING</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{billing}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">INVOICE GENRATED</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{start_date}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">INVOICE EXPIRING AT</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{end_date}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">SUBSCRIPTION STATUS</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">
+                                            {%if status == 'canceled' %}
+                                            <i class="fas fa-times-circle" style="color: red;"></i>
+                                            {% else %}
+                                            <i class="fas fa-check-circle" style="color: rgb(14, 129, 89);"></i>
+                                            {% endif %}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                {% if status == 'canceled' %}
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">SUBSCRIPTION CANCELED AT</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{cancelled_at}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                {% endif %}
+
+                                <!-- <div class="row">
+                                    <div class="col-2">
+                                        <p class="info-title">PRODUCT ID</p>
+                                    </div>
+                                    <div class="col-10">
+                                        <p class="info-desc">{{product_id}}</p>
+                                    </div>
+                                </div>
+                                <hr> -->
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">PLAN STATUS</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">
+                                            {% if plan == 'active' %}
+                                            <i class="fas fa-times-circle" style="color: red;"></i>
+                                            {% else %}
+                                            <i class="fas fa-check-circle" style="color: rgb(14, 129, 89);"></i>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">CURRENCY</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{currency}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <p class="info-title">TRIAL PERIOD</p>
+                                    </div>
+                                    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                        <p class="info-desc">{{trial}} days</p>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    {% if status == 'canceled' %}
+                                    <div class="mt-3 sub-cancel">
+                                        <a href="{% url 'reactivate_subscription' %}"><button style="padding:10px 10px;"
+                                                id="cancel_subscription"><i style="display:none;"
+                                                    class="fa fa-spinner fa-spin"></i>
+                                                Activate Subscription</button></a>
+                                    </div>
+                                    {% else %}
+                                    <div class="mt-3 sub-cancel">
+                                        <a href="{% url 'cancel_subscription' %}"><button id="cancel_subscription"><i
+                                                    style="display:none;" class="fa fa-spinner fa-spin"></i>
+                                                Cancel
+                                                Subscription</button></a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            {% else %}
+                            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+                                <div class="upgrade-plan text-center ml-auto mr-auto container">
+                                    <div><i style="color: gold;" class="fas fa-crown fa-2x"></i></div>
+                                    <h4 style="color: black;">Get the Premium Plan</h4>
+                                    <p>You get unlimited access of all the movies and also get to use the sentiment
+                                        analysis
+                                        tool.</p>
+                                    <div class="sub-upgrade">
+                                        <a href="{% url 'upgrade_account' %}"><button>
+                                                Upgrade Plan</button></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+                            {% else %}
+                            <h5 style="color: black; font-family: Verdana, Geneva, Tahoma, sans-serif;">Subscription
+                                plan information not available at the moment. <i style="color: rgb(184, 30, 30);"
+                                    class="fas fa-exclamation-circle"></i></h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Subscription End -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var cancel_button = document.getElementById('cancel_subscription');
+    var loader = (cancel_button.firstElementChild || cancel_button.firstChild)
+
+    cancel_button.addEventListener('click', () => {
+        loader.style.display = 'inline-block';
+    })
+</script>
+{% endblock %}

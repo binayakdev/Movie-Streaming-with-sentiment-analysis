@@ -1,0 +1,107 @@
+{% extends 'admin-panel/panel-layout.html' %}
+{% load static %}
+
+{% block style %}
+<link href="{% static 'Admin/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Available Plans -->
+    <div class="col-xl-12 col-lg-12 p-0">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Available Packages</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Membership Type</th>
+                            <th>Membership Description</th>
+                            <th>Price</th>
+                            <th>Stripe Plan ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for plan in plans %}
+                        <tr>
+                            <td>{{ plan.membership_type }}</td>
+                            <td>{{ plan.membership_description }}</td>
+                            <td>&dollar; {{ plan.price }}/mon</td>
+                            <td>{{ plan.stripe_plan_id }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- End of Available Plans -->
+
+
+    <div class="d-flex justify-content-between row">
+        <!-- Bar Chart -->
+        <div class="col-xl-12 col-lg-12 mt-3 card shadow mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">Premium - Free Users Count</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-bar">
+                    <canvas id="myBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- End of bar chart -->
+
+        <!-- Subscribers details -->
+        <div class="col-xl-12 col-lg-12 mt-3 card shadow mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">Subscribers Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Stripe Customer ID</th>
+                                <th>Stripe Subscription ID</th>
+                                <th>Subscription Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subscriber in subscribers %}
+                            <tr>
+                                <td>{{ subscriber.user.username }}</td>
+                                <td>{{ subscriber.stripe_customer_id }}</td>
+                                <td>&dollar; {{ subscriber.stripe_subscription_id }}</td>
+                                {% if subscriber.active %}
+                                <td><i class="fas fa-check-circle" style="color: rgb(14, 129, 89);"></i></td>
+                                {% else %}
+                                <td><i class="fas fa-times-circle" style="color: red;"></i></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- End of Subscribers details -->
+    </div>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    var plans = {{ membership| safe }};
+    var plan_members = {{ user_count| safe }};
+    console.log(plan_members)
+</script>
+<script type="text/javascript" src="{% static 'Admin/js/demo/subscriber.js' %}"></script>
+{% endblock %}

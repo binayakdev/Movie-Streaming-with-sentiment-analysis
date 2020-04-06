@@ -1,0 +1,102 @@
+canvas{
+  display:block;
+}
+
+/* ---- particles.js container ---- */
+
+#particles-js{
+  width: 100%;
+  height: 40vh;
+  background-color: rgb(35, 168, 242);
+  background-image: url('');
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+
+/* ---- Main content css */
+.sentiment-wrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sentiment-wrapper *{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-img {
+  width: 80%;
+  text-align: center;
+}
+
+.header-img img{
+  width: 30%;
+}
+
+@media(min-width: 1028px) and (max-width: 1100px) {
+  .header-img img{
+    width: 60%;
+  }
+}
+
+@media(min-width: 500px) and (max-width: 1028px) {
+  .header-img img{
+    width: 65%;
+  }
+}
+
+@media(max-width: 500px) {
+  .header-img img{
+    width:80%;
+  }
+}
+
+.sentiment-search button {
+  background: rgb(255, 202, 40);
+  width: 50px;
+  border: rgb(255, 202, 40);
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.sentiment-search button:hover {
+  opacity: .8;
+}
+
+.sentiment-search button:active {
+  background: gray;
+}
+
+.desc {
+  background: rgb(236, 239, 241);
+  height: auto;
+  padding: 5%;
+}
+
+.desc .container {
+  background: #fff;
+  box-shadow: 1px 1px 15px black;
+  border-radius: 10px;
+  padding: 3%;
+}
+
+.desc h1 {
+  color: rgb(50, 50, 50);
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.desc p {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 500;
+}
+
+.desc p span {
+  background: rgb(206, 206, 206);
+  padding: 2px;
+  color: black;
+}

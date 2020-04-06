@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'UserSettings/css/checkout.css' %}">
+<style>
+    nav {
+        background: white;
+        border-bottom: 1px solid rgb(224, 224, 224);
+    }
+
+    .navbar a {
+        color: rgb(105, 105, 105) !important;
+    }
+
+    .navbar a:hover {
+        color: rgb(31, 31, 31) !important;
+    }
+
+    #signin a {
+        color: #fff !important;
+    }
+
+    .navbar-toggler {
+        background: gray !important;
+    }
+
+    .navbar-brand img {
+        width: 80px;
+    }
+
+    body {
+        background: rgb(255, 255, 255);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ml-auto mr-auto plan-review-wrapper container">
+    <div class="plan-header">
+        <p>STEP <span style="font-weight: bold;">2</span> OF <span style="font-weight: bold;">3</span></p>
+        {% if plan.membership_type == 'Premium' %}
+        <h4>Monthly Plan</h4>
+        {% else %}
+        <h4>Free Access</h4>
+        {% endif %}
+    </div>
+    <div class="plan-description">
+        <p>{{plan.membership_description}}</p>
+    </div>
+    <div class="mt-3 plan-summary">
+        <div class="d-flex justify-content-between">
+            <div>
+                <p class="plan-type">{{plan.membership_type}} Plan</p>
+                <p class="plan-price">USD {{plan.price}}/mo.</p>
+            </div>
+            <div class="mt-auto mb-auto">
+                <a href="{% url 'choose_plan' %}">Change</a>
+            </div>
+        </div>
+    </div>
+    {% if plan.membership_type == 'Premium' %}
+    <div class="mt-3 credit-card">
+        <i class="far fa-credit-card"></i> Pay with Credit Card
+        <div class="d-flex">
+            <div class="mr-3"><img src="{% static 'UserSettings/images/visa.png' %}" alt="Visa" width="30"></div>
+            <div><img src="{% static 'UserSettings/images/mastercard.png' %}" alt="MasterCard"></div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="registration-info mt-3">
+        <p>To finish signup, click the Continue to the <span style="font-weight: bold;">Registration</span> page</p>
+    </div>
+    <div class="mt-5 btns">
+        {% if plan.membership_type == 'Premium' %}
+        <div><a href="{% url 'register' plan='Premium' %}"><button class="continue">CONTINUE</button></a></div>
+        {% else %}
+        <div><a href="{% url 'register' plan='Free' %}"><button class="continue">CONTINUE</button></a></div>
+        {% endif %}
+        <div class="mt-2"><button onclick="goBack()" class="cancel">CANCEL</button></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

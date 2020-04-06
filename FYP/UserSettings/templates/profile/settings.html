@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block style %}
+<style>
+    body {
+        background: #fff;
+    }
+
+    .navbar {
+        background: rgb(27, 27, 27);
+    }
+
+    .navbar-brand {
+        height: 70px;
+        width: 70px;
+    }
+
+    .content-wrapper {
+        padding-top: 5%;
+        height: 90vh;
+    }
+
+    .del-btn {
+        box-shadow: inset 0px 1px 0px 0px #cf866c;
+        background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+        background-color: #d0451b;
+        border-radius: 3px;
+        border: 1px solid #942911;
+        text-decoration: none;
+        color: #ffffff;
+        font-family: Arial;
+        font-size: 15px;
+        display: inline-block;
+        cursor: pointer;
+        padding: 6px 24px;
+        text-decoration: none;
+    }
+
+    .del-btn a {
+        text-decoration: none;
+        background: none;
+        color: #ffffff;
+        font-family: Arial;
+        font-size: 15px;
+    }
+
+    .del-btn:hover {
+        background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+        background-color: #bc3315;
+    }
+
+    .del-btn:active {
+        position: relative;
+        top: 1px;
+    }
+</style>
+{% endblock %}
+
+{%block content %}
+<div class="content-wrapper">
+    <div class="container">
+        <h1 style="color: rgb(24, 21, 21);">Delete User ?</h1>
+        <p class="text-muted">Delete this user from the database.</p>
+        <p class="text-muted">*Note: You will lose your subscription and access to this website premium content.</p>
+        <div class="d-flex">
+            <button class="del-btn"><a data-toggle="modal" data-target="#logoutModal">Delete
+                </a></button>
+            <button class="ml-3 cancel-btn"><a class="dropdown-item" href="{% url 'profile' %}">Go Back
+                </a></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete your account?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Delete" to confirm.</div>
+            <div class="modal-footer">
+                <button class="p-1" type="button" data-dismiss="modal">Cancel</button>
+                <button class="del-btn"><a href="{% url 'delete_profile' %}">Delete</a></button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

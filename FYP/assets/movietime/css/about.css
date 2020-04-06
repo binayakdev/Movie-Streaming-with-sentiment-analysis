@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Roboto:100&display=swap');
+
+body {
+    background: #fff;
+}
+
+.about h1 {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+    color: rgb(50, 50, 50);
+}
+
+.about hr{
+    height: 2px;
+}
+
+.about p {
+    font-family: sans-serif;
+    color: #81838d;
+}
+
+.about a {
+    text-decoration: none !important;
+}
+
+
+.navbar {
+    background: #fff;
+    box-shadow: 2px 2px 5px gray;
+}
+
+.navbar-brand img {
+    height: 60px;
+    width: 60px;
+}
+
+.navbar a {
+    color: #333333;
+}
+
+.full-view {
+    height: auto;
+}
+
+.about-header {
+    padding: 5% 1% 5% 5%;
+}
+
+.about-header-img {
+    transform: perspective( 1000px ) rotateY( 35deg );
+    -webkit-box-shadow: 0 8px 6px -6px black;
+	-moz-box-shadow: 0 8px 6px -6px black;
+    box-shadow: 0 30px 30px -6px black;
+}
+
+@media (max-width: 700px) {
+    .about-header-img {
+        -webkit-box-shadow: 0 8px 6px -6px black;
+        -moz-box-shadow: 0 8px 6px -6px black;
+        box-shadow: 0 20px 20px -6px black;
+    }
+}
+
+.about-search{
+    text-align: center;
+    padding: 5% 15%;
+}
+
+.faq {
+    height: auto;
+    padding: 5% 0 5% 0;
+    background: #000;
+}
+
+.faq h1 {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    text-decoration: underline red;
+}
+
+.faq .faq-content{
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (max-width: 700px) {
+    .faq .faq-content {
+        width: 100%;
+    }
+
+    .question h4, .answer h4 {
+        font-size: 1.3em;
+    }
+}
+
+
+
+.faq .faq-content .question, .answer {
+    background: rgb(48, 48, 48);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 2% 2%;
+}
+
+.faq .faq-content .question {
+    position: relative;
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.faq .faq-content .question h4 {
+    width: 90%;
+}
+
+.faq .faq-content .question h4 span {
+    position: absolute;
+    right: 5%;
+}
+
+.faq .faq-content .question h4 span i:hover {
+    color: rgb(202, 202, 202);
+}
+
+.faq .faq-content .answer {
+    margin-top: 1px;
+}
+
+.plan-background {
+    margin-top: -20px;
+}
+
+#plan h1 {
+    color: white;
+    font-weight: 200;
+    font-size: 4em;
+    font-family: 'Roboto';
+}
+
+#plan h3 {
+    font-family: 'Montserrat';
+    font-weight: 100;
+    color: white !important;
+}
+
+#plan .plan-free {
+    background: white;
+    border-top: 5px solid black;
+    padding-top: 5%;
+    -webkit-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+}
+
+#plan .plan-paid {
+    background : white;
+    border-top: 5px solid black;
+    padding-top: 5%;
+    -webkit-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         7px 7px 15px 0px rgba(50, 50, 50, 0.75);
+}
+
+#plan .row .header {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+    color: rgb(78, 78, 78);
+}
+
+#plan .row .header-info {
+    margin-top: -10px;
+    font-family: 'Roboto';
+    font-size: 30px;
+    font-weight: 600;
+    color: rgb(116, 116, 116);
+    padding: 0 5%;
+}
+
+#plan .row .price {
+    font-size: 50px;
+    font-weight: 600;
+    font-family: 'Roboto';
+}
+
+#plan .row .price span {
+    font-size: 20px;
+    font-weight: none;
+}
+
+#plan .row .package-btn button{
+    background: black;
+    color: white;
+    font-family: 'Montserrat';
+    padding: 2% 15%;
+    border: none;
+    border-radius: 5px;
+}
+
+#plan .row .package-btn button:hover {
+    opacity: 0.8;
+}
+
+#plan .plan-free:hover, .plan-paid:hover {
+    transform: translateY(-20px);
+    transition: transform 0.5s linear;
+    }
+
+#plan .package-list {
+    margin-top: 3rem;
+    border-top: 1px solid rgb(212, 212, 212);
+    background: rgb(247, 247, 247);
+    width:100%;
+    padding: 0 5%;
+}
+
+#plan .package-list .fa-check {
+    color: rgba(32, 184, 220, 0.95);
+}
+
+#plan .package-list .fa-times {
+    color: rgb(231, 90, 90);
+}
+
+#plan .package-list table tr td {
+    padding: 5% 2%;
+}
+
+@media (max-width: 1100px) {
+    .about-header-img {
+        transform: perspective(1000px) rotateY(20deg);
+    }
+
+
+    .about-header .header-content {
+        text-align: center;
+        padding: 5% 10% 0 10%;
+    }
+
+    .about-header .header-content .d-flex {
+        justify-content: center;
+
+}
+
+@media (max-width: 700px) {
+    .about h1 {
+        font-size: 30px;
+    }
+}

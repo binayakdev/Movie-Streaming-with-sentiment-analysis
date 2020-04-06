@@ -1,0 +1,196 @@
+{% extends 'admin-panel/panel-layout.html' %}
+{% load static %}
+{% load timetags %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+
+{% if not stripe_error %}
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800"><span><img style="border-radius: 5px;"
+                src="{% static 'Admin/images/stripe.png' %}" width="100" alt="Stripe"></span> Dashboard</h1>
+    <p class="mb-4">Check the stripe balance amount and the due amount that is yet to be processed, the product overview
+        and all the events in your stripe account (of the last 30 days).
+    </p>
+
+    <div class="row">
+
+        <!-- Stripe Balance in bank -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Balance</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">&euro; {{ balance }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-euro-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stripe Balance Due -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Due</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">&euro; {{ due }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Note</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <p style="font-size: 12px; color: red;" class="m-0"><i
+                                        class="fas fa-exclamation-circle"></i> The first payout for every new
+                                    Stripe account is made
+                                    7 business days after the first successful payment is received.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- This is the product info -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div style="background: rgb(60, 66, 87);"
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div>
+                        <h6 style="color: white !important;" class="m-0 font-weight-bold text-primary">Stripe Products
+                            ({{products.name}})</h6>
+                    </div>
+                    <div>
+                        Status: {% if products.active %}
+                        <i style="color:green;" class="fas fa-circle"></i>
+                        {% else %}
+                        <i style="color: red;" class="fas fa-circle"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div style="background: rgb(42, 47, 69);" class="card-body">
+                    <!-- Body of the card -->
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <h6 class="label">Product ID:</h6>
+                            </td>
+                            <td>
+                                <h6 style="color: green;" class="value ml-1">{{products.id}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6 class="label">Created at:</h6>
+                            </td>
+                            <td>
+                                <h6 class="value ml-1">{{ products.created|timestamp }}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6 class="label"> Updated at:</h6>
+                            </td>
+                            <td>
+                                <h6 class="value ml-1">{{ products.updated|timestamp }}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6 class="label">Type:</h6>
+                            </td>
+                            <td>
+                                <h6 class="value ml-1">{{products.type}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6 class="label"> Livemode:</h6>
+                            </td>
+                            <td>
+                                <h6 style="color:rgb(0, 140, 255);" class="value ml-1">{{products.livemode}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of product info -->
+
+    <!-- Subcribers info -->
+    <div class="col-xl-12 col-lg-12 p-0">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Stripe Events</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="table-responsive">
+                <table class="table" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr style="background:rgb(247, 250, 252);">
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                        <tr style="border-top: 1px solid rgb(211, 211, 211); font-size: .8em; color:black;">
+                            <td>{{event.id}}</td>
+                            <td>{{event.data.object.lines.data.0.description}}</td>
+                            <td>{{event.data.object.email}}</td>
+                            <td>{{event.type}}</td>
+                            <td>{{event.created|timestamp}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- End of stripe events -->
+
+</div>
+{% else %}
+<div class="text-center">
+    <div class="error mx-auto" data-text="500">500</div>
+    <p class="lead text-gray-800 mb-5">Internal Server Error</p>
+    <p class="text-gray-500 mb-0">Couldn't communicate with the Stripe(payment gateway) due to some API issues.</p>
+    <div style="border-radius: 10px; color: white; background: gray; padding: 15px;" class="mt-3 mb-3 container">
+        <p class="text-white-500 mb-0">{{stripe_error}}</p>
+    </div>
+    <a href="{% url 'admin-index' %}">&larr; Back to Dashboard</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}

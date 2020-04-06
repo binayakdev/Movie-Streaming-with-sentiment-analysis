@@ -1,0 +1,241 @@
+#logo {
+    width: 70%;
+}
+
+.favourites {
+    color: gray;
+    text-decoration: none;
+    margin: 0 10px 0 10px;
+}
+
+.query a {
+    text-decoration: none;
+    color: white;
+}
+
+#failed-search:hover {
+    opacity: .7;
+}
+
+#movie-dropdown a:active i {
+    color: white !important;
+}
+
+@media (min-width: 300px) and (max-width: 1200px) {
+    .favourites {
+        margin: 0;
+    }
+}
+
+#fav-notify {
+    position: fixed;
+    bottom: 20px;
+    left: 15px;
+    border: 1px solid rgb(88, 88, 88);
+    border-radius: 5px;
+    background: rgb(50, 50, 50);
+    padding: 15px 15px;
+    width: 250px;
+    z-index: 1000;
+    box-shadow: 3px 3px 5px black;
+    animation: slide-in 0.2s ease-in;
+    display: none;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(100px);
+    }
+
+    to {}
+}
+
+#fav-notify p {
+    margin: 0;
+    color: #fff;
+}
+
+#genre-filter {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 700px;
+    background: #fff;
+    z-index: 100;
+    box-shadow: 0px 3px 15px black;
+    border-radius: 5px;
+    backdrop-filter: blur(2px);
+    padding: 3% 5%;
+    display: none;
+}
+
+#exit-filter {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+#exit-filter i:hover {
+    color: rgb(50, 50, 50);
+}
+
+@media (max-width: 700px) {
+    #genre-filter {
+        width: 90%;
+    }
+}
+
+.movie-container {
+    padding: 5px;
+    position: relative;
+}
+
+.bookmarked {
+    position: absolute;
+    top: 0;
+    right: 15%;
+    z-index: 10;
+}
+
+.movie {
+    margin-bottom: 5%;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+.clickable img {
+    cursor: pointer;
+}
+
+.movie img:hover {
+    filter: brightness(50%);
+}
+
+.hover-desc {
+    display: none;
+    position: absolute;
+}
+
+.movie a:hover .hover-desc{
+    display: block;
+    background: rgb(0, 0, 0, 0.7);
+    border-radius: 10px;
+    height: 87%;
+    width: 70%;
+    left: 15%;
+    top: 5%;
+    color: white;
+    text-align: center;
+    padding: 45% 5px 0 5px;
+}
+
+.movie img {
+    border-radius: 10px;
+    margin-bottom: 1%;
+}
+
+.pagination {
+    margin-top: 5%;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 3%;
+}
+
+.pagination button {
+    padding: 5px;
+    background: rgb(30, 33, 41);
+    border: none;
+    padding: 3%;
+    width: 60px;
+    color: white;
+}
+
+.pagination button:hover {
+    background: rgb(32, 162,242);
+}
+
+.movie-title {
+    display: none;
+}
+
+#page-search {
+    background: none;
+    border: none;
+}
+
+/* This is for the search fail */
+.search-failed {
+    height: 100%;
+    width: 100%;
+    background: aliceblue;
+    border-radius: 10px;
+    padding: 2%;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.search-failed p {
+    color: gray;
+}
+
+.search-failed p span {
+    color: black;
+    font-weight: 700;
+    text-decoration: underline green;
+}
+
+.search-failed h1 {
+    color: #060000;
+}
+
+.search-failed img {
+    height: 200px;
+    width: 200px;
+}
+
+.recommend {
+    margin-top: 3%;
+    width: 100%;
+}
+
+.recommend .row {
+    justify-content: center;
+}
+
+.query {
+    background: rgb(23, 186, 155);
+    color: white;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 5px 5px 5px 5px;
+    font-size: .8rem;
+    font-family: sans-serif;
+}
+
+.query:hover {
+    text-decoration: underline white;
+    background: rgb(105, 231, 129);
+    color: #252321;
+}
+
+@media (min-width: 320px) and (max-width: 700px) {
+    .movie img {
+        width: 100%;
+        height: 60%;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 1200px) {
+    .movie-title {
+        display: block;
+    }
+
+    .result {
+        text-align: center;
+        font-size: 1rem;
+    }
+}

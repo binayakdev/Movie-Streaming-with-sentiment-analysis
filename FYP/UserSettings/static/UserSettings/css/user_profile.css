@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    background-color: rgb(236, 236, 236) !important;
+}
+
+#main-heading h2 {
+    color: rgb(32, 33, 36) !important;
+    font-family: 'Roboto', sans-serif;
+}
+
+#main-heading p {
+    color: rgb(105, 105, 105);
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.card-title {
+    font-family: 'Roboto', sans-serif;
+    color: rgb(32, 33, 36);
+}
+
+.card-text {
+    font-family: 'Roboto', sans-serif;
+    color: rgb(105, 105, 105);
+}
+
+.info-title {
+    font-family: 'Roboto', sans-serif;
+    color: rgb(114, 114, 121);
+    font-size: .9rem;
+    font-weight: bold;
+}
+
+.info-desc {
+    font-family: 'Roboto', sans-serif;
+    color: black;
+}
+
+.label {font-weight: bold;}
+.label, .value {color:#333333}
+
+.profile-wrapper {
+    min-height: 90vh;
+    background: #fff;
+    max-height: auto;
+}
+
+.main-container hr{
+    display: block;
+    background-color: gray;
+}
+
+.main-container .container {
+    padding: 3% 7% 3% 7%;
+}
+
+.heading h1{
+    font-family: sans-serif;
+    color: #333333;
+}
+
+.profile-info-1 p{
+    margin: 0;
+    color: #333333;
+    font-family: sans-serif;
+}
+
+.sub-cancel button{
+    background: #E6E6E6;
+    border-bottom: 1.5px solid rgb(194, 194, 194);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 5% 10%;
+    font-family: sans-serif;
+    width: 200px;
+}
+
+.sub-cancel button:hover {
+    background: rgb(243, 243, 243);
+}
+
+.sub-upgrade button{
+    background: rgb(229, 9, 20);
+    border:none;
+    padding: 10px 15px;
+    font-family: sans-serif;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.sub-upgrade button:hover {
+    filter: brightness(0.8);
+}

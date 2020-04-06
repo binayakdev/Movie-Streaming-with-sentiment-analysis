@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"> -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <!-- <script src="https://use.fontawesome.com/7616b2b4d0.js"></script> -->
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <title>MovieTime: {{ title }}</title>
+    {% block style %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="wrapper showcase">
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color" style="z-index: 100;">
+            <a class="navbar-brand" href="/"><img id="logo" class="img-responsive" src="{% static 'images/logo.png' %}"
+                    alt="" width="100%" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent-333" aria-controls="navbarSupportedContent-333"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+                <ul class="navbar-nav mr-auto" style=" text-align: end; justify-content: end;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sentiment_index' %}">Sentiment Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about" style="margin-bottom: 15px;">About</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated and user.is_staff == False and user.is_admin == False %}
+                <ul class="navbar-nav ml-auto nav-flex-icons" style="text-align: end;">
+                    <li class="nav-item mt-2">
+                        <a class="nav-link" href="{% url 'list_favourites' %}" style="margin-bottom: 15px;"><i
+                                class="fas fa-th-list"></i> My List</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img class="img-responsive" style="border-radius: 50%; object-fit: cover;"
+                                src="{{ user.avatar.url }}" class="rounded-circle z-depth-0" alt="avatar image"
+                                height="45" width="45">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                            aria-labelledby="navbarDropdownMenuLink-333" style="text-align: center;">
+                            <p style="font-weight: bold; ">{{ user.username }}<span
+                                    style="justify-content: center; display: flex; padding: 0 2rem 0 2rem; font-weight: normal;">{{ user.email }}</span>
+                            </p>
+                            <hr>
+                            <a class="dropdown-item" href="{% url 'profile' %}">View Profile</a>
+                            <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+                {% else %}
+                <div id="signin" style="text-align: end; padding-right: 0;"><a href="{% url 'login' %}"
+                        class="btn btn-rounded">Sign
+                        In</a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="main" style="position: relative;">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <!-- Site footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h6>About</h6>
+                    <p class="text-justify">MovieTime.com. This website offers you the movie streaming capabilities
+                        just like some of the other movie streaming websites like Netflix, Youtube. It allows to watch
+                        movies,
+                        add movies to your favorite lists and also watch them offline. However, the unique thing about
+                        this website
+                        is that it provides you analysis tools to analyze the movies from the twitter dataset and then
+                        make your
+                        decisions.
+                    </p>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6>Inspired By</h6>
+                    <ul class="footer-links">
+                        <li><a href="https://www.netflix.com"><img class="img-responsive"
+                                    src="{% static 'movietime/images/netflix.png' %}" alt="" height="50" width="90"></a>
+                        </li>
+                        <li><a href="http://fmovies.wtf"><img class="img-responsive"
+                                    src="{% static 'movietime/images/fmovies.png' %}" alt="" height="30" width="90"></a>
+                        </li>
+                        <!-- <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
+                        <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
+                        <li><a href="http://scanfcode.com/category/android/">Android</a></li>
+                        <li><a href="http://scanfcode.com/category/templates/">Templates</a></li> -->
+                    </ul>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6>Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="#">Movie Analysis</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-12">
+                    <p class="copyright-text">Copyright &copy; 2020 All Rights Reserved by
+                        <a href="/">MovieTime</a>.
+                    </p>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <ul class="social-icons">
+                        <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a class="dribbble" href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>
+
+</script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% block script %}
+{% endblock %}
+
+</html>

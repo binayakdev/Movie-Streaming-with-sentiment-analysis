@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'movietime/css/main.css' %}">
+<style>
+    .showcase {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        background: url("{% static 'movietime/images/netflix-background.jpg' %}") no-repeat center center/cover;
+        background-attachment: fixed;
+    }
+
+    .showcase::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.6);
+        box-shadow: inset 120px 100px 250px #000000, inset -120px -100px 250px #000000;
+    }
+
+    @media (max-width: 700px) {
+        .showcase::after {
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: inset 30px 30px 50px #000, inset -30px -30px 50px #000;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="showcase-content">
+    <h1>Search Movies</h1>
+    <form action="/movies" method="GET" style="width: 100%;">
+        <div class="input-group md-form form-sm form-2 pl-0">
+            <input class="form-control my-0 py-4 amber-border" name="movies" type="text" placeholder="Search..."
+                aria-label="Search">
+            <button type="submit"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
+        </div>
+    </form>
+</div>
+{% endblock %}

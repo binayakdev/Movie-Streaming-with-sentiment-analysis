@@ -1,0 +1,229 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'movietime/css/about.css' %}">
+<style>
+    .navbar a {
+        color: rgb(105, 105, 105) !important;
+    }
+
+    .navbar a:hover {
+        color: rgb(31, 31, 31) !important;
+    }
+
+    #signin a {
+        color: #fff !important;
+    }
+
+    .navbar-toggler {
+        background: gray !important;
+    }
+
+    .plan-background {
+        background: linear-gradient(90deg, rgba(2, 0, 36, 0.95) 0%, rgba(29, 81, 129, 0.95) 35%, rgba(32, 184, 220, 0.95) 100%),
+        url("{% static 'movietime/images/movie-poster.jpg' %}") no-repeat center center/cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="about">
+    <!-- This is the header of the about page -->
+
+    <div class="container-fluid">
+        <div class="about-header full-view">
+            <div class="row">
+                <div class="col-12 col-xl-8">
+                    <img class="about-header-img" src="{% static 'movietime/images/about-header.jpg' %}" width="100%"
+                        alt="">
+                </div>
+                <div class="col-12 col-xl-4 header-content" style="margin-left: -5%; margin-top: 5%;">
+                    <h1>Welcome to MovieTime</h1>
+                    <p class="mt-5">
+                        In this website you can watch all of your favourites movies and enjoy the premium services the
+                        website has to offer. Along with movie streaming capability, you can also perform sentiment
+                        analysis on all of your favourite movies.
+                    </p>
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="/">
+                            <i class="fas fa-play-circle fa-lg"> Start Watching</i>
+                        </a>
+                        <a href="{% url 'sentiment_index' %}">
+                            <i class="fas fa-laugh-beam fa-lg"> Sentiment Analysis</i>
+                        </a></h4></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End of the header -->
+
+
+    <!-- Search for your movies -->
+
+    <div id="search" class="container">
+        <hr>
+        <div class="full-view about-search">
+            <h1>Search for your favourite movies</h1>
+            <p class="mt-5">
+                You can search for your favourite movies or you can do an empty search to see all the movies. You can
+                also bookmark your favourite movies so that you can view it later. The search results will highlight all
+                of your favourites movies for you.
+            </p>
+            <a href="/movies?movies=">Try a empty search <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="search-video">
+                <video class="embed-responsive-item" src="{% static 'movietime/videos/movie_search.mp4' %}" width="100%"
+                    autoplay loop muted></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- End of this section {Search for your movies} -->
+
+    <!-- Perform sentiment analysis section -->
+
+    <div id="sentiment" class="container">
+        <hr>
+        <div class="full-view about-search">
+            <h1>Perform sentiment analysis on your favourite movies</h1>
+            <p class="mt-5">
+                You can perform sentiment analysis on your favourite movies. You are not restricted to movies that are
+                only available in our database. You can get analysis on any movie you desire. Our platform extracts all
+                the reviews of a movie from twitter and then runs a algorithm to provide you with a qualitative analysis
+                on your favourite movie.
+            </p>
+            <a href="/movies?movies=">Try Sentiment analysis <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="sentiment-analysis">
+                <img class="img-responsive" src="{% static 'movietime/images/sentiment_animation.gif' %}" width="100%"
+                    height="90%" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!-- End of this section {Perform sentiment analysis section} -->
+
+    <!-- Perform sentiment analysis section -->
+
+    <div class="plan-background">
+        <div id="plan">
+            <hr>
+            <div class="container full-view text-center">
+                <h1 class="mt-5">Select Your Plan</h1>
+                <h3>No hidden fees, equipment rentals or installation appointments.</h3>
+                <div class="row mt-5">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mb-5">
+                        <div class="plan-free">
+                            <p class="header">MOVIE TIME</p>
+                            <p class="header-info">{{ free_plan.membership_description }}</p>
+                            <p class="price">FREE</p>
+                            <div class="package-btn"><a
+                                    href="{% url 'review_subscription' subscription_type='Free' %}"><button>GET
+                                        STARTED</button></a>
+                            </div>
+                            <div class="package-list">
+                                <table>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Check movie trailers, cast, directors, ratings, and other info.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Get unlimited access the MovieTime streaming library.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Watch your favourite movies anytime - anywhere.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-times"></i></td>
+                                        <td>Get Sentiment Analysis tool to analyze all the exclusive movies.</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mb-5">
+                        <div class="plan-paid">
+                            <p class="header">MOVIE TIME + SENTIMENT ANALYSIS</p>
+                            <p class="header-info">{{ premium_plan.membership_description }}</p>
+                            <p class="price">${{ premium_plan.price }} / <span class="month">month</span></p>
+                            <div class="package-btn"><a
+                                    href="{% url 'review_subscription' subscription_type='Premium' %}"><button>GET
+                                        STARTED</button></a>
+                            </div>
+                            <div class="package-list">
+                                <table>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Check movie trailers, cast, directors, ratings, and other info.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Get unlimited access the MovieTime streaming library.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Watch your favourite movies anytime - anywhere.</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><i class="fas fa-check"></i></td>
+                                        <td>Get Sentiment Analysis tool to analyze all the exclusive movies.</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End of this section {Perform sentiment analysis section} -->
+
+
+    <!-- Frequently asked questions -->
+
+    <div class="faq">
+        <div class="container">
+            <h1>Frequently Asked Questions</h1>
+            <div class="faq-content mt-5">
+                {% for faq in faqs %}
+                <div class="mb-2">
+                    <div class="question">
+                        <h4>{{faq.question}} <span class="ml-auto"><i class="view-more fas fa-chevron-down"></i></span>
+                        </h4>
+                    </div>
+                    <div class="answer">
+                        <h4 style="color: rgb(155, 155, 155);">{{faq.answer}}</h4>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- End of this section {Frequently asked questions} -->
+
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+    view_more = document.getElementsByClassName("question");
+    answers = document.getElementsByClassName("answer");
+    for (let answer of answers) { answer.style.display = 'none'; }
+
+    for (var i = 0; i < view_more.length; i++) {
+        (function (index) {
+            view_more[index].addEventListener('click', function () {
+                answer = document.getElementsByClassName("answer")[index];
+                view_more_icon = document.getElementsByClassName("view-more")[index];
+                answer.style.display = (answer.style.display === 'none') ? 'block' : 'none';
+                (answer.style.display == 'none') ? view_more_icon.style.transform = 'rotate(' + 0 + 'deg)' : view_more_icon.style.transform = 'rotate(' + 180 + 'deg)'
+            }, false);
+        })(i)
+    }
+</script>
+{% endblock %}

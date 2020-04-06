@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.label {font-weight: bold;}
+.label, .value {color:#333333}
+
+.profile-wrapper {
+    min-height: 90vh;
+    background: #fff;
+    max-height: auto;
+}
+
+.main-container hr{
+    display: block;
+    background-color: gray;
+}
+
+.main-container .container {
+    padding: 3% 7% 3% 7%;
+}
+
+.heading h1{
+    font-family: sans-serif;
+    color: #333333;
+}
+
+.profile-info-1 p{
+    margin: 0;
+    color: #333333;
+    font-family: sans-serif;
+}
+
+.sub-cancel button{
+    background: #E6E6E6;
+    border-bottom: 1.5px solid rgb(194, 194, 194);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 5% 10%;
+    font-family: sans-serif;
+}
+
+.sub-cancel button:hover {
+    background: rgb(243, 243, 243);
+}

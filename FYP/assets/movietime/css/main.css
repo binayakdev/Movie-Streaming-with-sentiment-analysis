@@ -1,0 +1,153 @@
+h1 {
+    background: -webkit-linear-gradient(#eee, gray, rgb(35, 161, 242));
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-family: sans-serif;
+    padding: 10px;
+}
+
+.showcase-content {
+    position: relative;
+    z-index: 2;
+    width: 65%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 5rem;
+}
+
+.showcase-content h1 {
+    font-weight: 700;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    margin: 0 0 2rem;
+}
+
+.showcase-content p {
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 400;
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 2rem;
+}
+
+.social {
+    text-align: center;
+    width: 20%;
+}
+
+/* Search Box */
+.showcase-content .input-group input {
+    color: grey;
+    box-shadow: 2px 2px 15px gray;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.showcase-content button {
+    background: rgb(35, 161, 242);
+    width: 50px;
+    border: rgb(35, 161, 242);
+    z-index: 2;
+}
+
+.showcase-content button:hover {
+    opacity: .8;
+}
+
+.showcase-content button:active {
+    background: gray;
+}
+
+@media (max-width: 960px) {
+    .hide-sm {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .showcase-content {
+        width: 90%;
+    }
+
+    .showcase-content h1 {
+        font-size: 2.5rem;
+        line-height: 1;
+    }
+
+    .showcase-content p {
+        font-size: 1rem;
+    }
+}
+
+@media(max-height: 600px) {
+    .showcase-content {
+        margin-top: 3rem;
+    }
+}
+
+
+@media (min-width: 320px) and (max-width: 700px) {
+    .social {
+        text-align: center;
+        width: 70%;
+    }
+
+    .navbar-brand {
+        width: 20%;
+    }  
+
+    .btn {
+        margin-top: 0px;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 900px) {
+
+    .showcase-content {
+        margin-top: 5rem;
+    }
+
+    .navbar-brand {
+        width: 17%;
+    } 
+
+    .social {
+        text-align: center;
+        width: 50%;
+    }
+
+    .btn {
+        margin-top: 0px;
+    }
+}
+
+@media (min-width: 990px) and (max-width: 1200px) {
+
+    .showcase-content {
+        margin-top: 20rem;
+    }
+
+    .navbar-brand {
+        width: 15%;
+    }
+
+    .social {
+        text-align: center;
+        width: 50%;
+    }
+
+    li {
+        font-size: 1.2em;
+    }
+
+    .btn {
+        font-size: 1.2em;
+    }
+}
+
+@media (min-width: 1000px) and (max-width: 1400px) {
+}

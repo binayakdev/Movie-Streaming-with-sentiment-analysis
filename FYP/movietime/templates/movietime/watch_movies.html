@@ -1,0 +1,230 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'movietime/css/watch_movies.css' %}">
+<style>
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 10px;
+        z-index: 100;
+        width: 30%;
+    }
+
+    .modal-title {
+        font-size: 1.3em;
+        font-family: 'Roboto', sans-serif;
+        color: rgb(29, 29, 29);
+    }
+
+    .modal-footer {
+        padding: 5%;
+        background: rgb(233, 233, 233);
+    }
+
+    .modal-footer button {
+        background: rgb(0, 174, 255);
+        border-bottom: 2px solid rgb(0, 135, 197);
+        width: 100% !important;
+        padding: 3% 0;
+        color: white;
+        font-size: 1.5em;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .features ul li {
+        list-style: none;
+        padding: 2%;
+        color: rgb(146, 146, 146);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<!-- Django messages section -->
+{% if messages %}
+{% for message in messages %}
+{% if message.extra_tags == '500 Internal Server Error' %}
+<div class="toast" role="alert" data-autohide="false" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <div><i style="color: red;" class="fas fa-exclamation-triangle mr-2"></i></div>
+        <strong class="mr-auto">{{message.extra_tags}}</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        {{message}}
+    </div>
+</div>
+{% else %}
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{message.extra_tags}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><i style="color: rgb(0, 153, 255);" class="fas fa-info-circle"></i> {{message}}</p>
+                <div>
+                    <h1 style="color: gray; font-weight: bold;"><span><img style="width: 100px;" class="img-responsive"
+                                src="{% static 'images/logo.png' %}" alt="" /></span> MOVIE TIME <i style="color: gold;"
+                            class="fas fa-unlock-alt"></i></h1>
+                </div>
+                <div style="padding:0 2%;" class="mt-2 features">
+                    <ul>
+                        <li><i class="fas fa-tv mr-2"></i> Get unlimited access to the MovieTime streaming library</li>
+                        <hr>
+                        <li><i class="fas fa-file-alt mr-2"></i> Check movie trailers, cast, directors, ratings, and
+                            other
+                            info.</li>
+                        <hr>
+                        <li><i class="fas fa-clock mr-2"></i> Watch your favourite movies anytime - anywhere.</li>
+                        <hr>
+                        <li><i class="far fa-chart-bar mr-2"></i> Get Sentiment Analysis tool to analyze all the
+                            exclusive
+                            movies.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-3" style="width: 100%; display: inline-block;"><a
+                        href="{% url 'profile' %}#subscription"><button type="button" class="btn btn-primary"><i
+                                style="color: rgb(83, 201, 255)" class="fas fa-gamepad"></i>
+                            Upgrade
+                            Account for
+                            only $15/mo</button></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+<!-- Notification -->
+<div id="fav-notify">
+    <p id="fav-notify-msg"></p>
+</div>
+<div class="watch_movies-wrapper">
+    <div id="video-player" class="container">
+        <video src="{{ movie.video.url }}" width="100%" controls controlsList="nodownload" preload="metadata"></video>
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+                <img class="img-responsive movie-img" src="{{ movie.poster.url }}" alt="">
+            </div>
+            <div class="col-12 col-md-8 col-lg-9 movie-desc">
+                <h4>{{ movie.title }}</h4>
+                <p>{{movie.summary}}
+                </p>
+                <div class="row extra-desc">
+                    <div class="col-12 col-md-7 col-lg-8">
+                        <p>Genre: <span>
+                                {% for genre in movie.genre.values %}
+                                {{ genre.genre_name }}
+                                {% endfor %}
+                            </span>
+                        </p>
+                        <p>Director:
+                            {% for director in directors %}
+                            <a href="http://www.google.com/search?q={{director}}"><span>{{director}}</span></a>
+                            {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <p>Cast:
+                            {% for cast in casts %}
+                            <a
+                                href="http://www.google.com/search?q={{cast}}"><span>{{cast}}</span></a>{% if not forloop.last %},
+                            {% endif %}
+                            {% endfor %}
+                        </p>
+                        <div class="d-flex">
+                            <p>Actions:
+                                <span>
+                                    <div class="d-flex buttons">
+                                        {% if is_bookmarked %}
+                                        <div id="favourite" data-href="{% url 'favourite_movie' id=movie.id %}"
+                                            class="ml-4"><i id="add_icon" data-toggle="tooltip"
+                                                title="Remove from My list" class="fas fa-plus-circle fa-lg"
+                                                aria-hidden="true"></i>
+                                        </div>
+                                        {% else %}
+                                        <div id="favourite" data-href="{% url 'favourite_movie' id=movie.id %}"
+                                            class="ml-4"><i id="add_icon" data-toggle="tooltip" title="Add to My list"
+                                                class="fas fa-plus fa-lg" aria-hidden="true"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div id="sentiment" class="ml-4"><a
+                                                href="/sentiment/analysis/movie_id={{movie.id}}"><i
+                                                    data-toggle="tooltip" title="Perform Sentiment Analysis"
+                                                    class="fas fa-laugh-beam fa-lg"></i></a>
+                                        </div>
+                                        <div id="off-down" class="ml-4"><a href="{{movie.video.url}}" download><i
+                                                    data-toggle="tooltip" title="Download this movie"
+                                                    class="fa fa-cloud-download fa-lg" aria-hidden="true"></i></a>
+                                        </div>
+                                    </div>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-4">
+                        <p>Release: <span>{{movie.release_date}}</span></p>
+                        <p style="display: flex;">Quality: <span class="quality"
+                                style="color: white;">{{movie.quality}}</span></p>
+                        <p>Duration: <span>{{movie.duration}}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Modal").modal();
+        $('.toast').toast('show');
+    });
+
+    document.getElementsByTagName('video')[0].poster = "{{ movie.poster.url }}";
+
+    bookmark_icon = document.getElementById("add_icon")
+
+    bookmark_icon.addEventListener('click', function () {
+        if (bookmark_icon.classList.contains("fa-plus")) {
+            bookmark_icon.classList.remove("fa-plus");
+            bookmark_icon.classList.add("fa-plus-circle");
+            bookmark_icon.setAttribute("title", "Remove from My list")
+        }
+        else {
+            bookmark_icon.classList.remove("fa-plus-circle");
+            bookmark_icon.classList.add("fa-plus");
+            bookmark_icon.setAttribute("title", "Add to My list")
+        }
+    }, false);
+
+    $(document).ready(function () {
+        $('#favourite').click(function () {
+            $.ajax({
+                url: $(this).attr("data-href"),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success) {
+                        $('#fav-notify-msg').html(data.message);
+                        $('#fav-notify').show();
+                        setTimeout(function () { $("#fav-notify").fadeOut(); }, 3000);
+                        console.log("Movie added");
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+{% endblock %}

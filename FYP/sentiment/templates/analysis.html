@@ -1,0 +1,569 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load money %}
+
+{% block style %}
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'sentiment/css/circle.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'sentiment/css/card.css' %}"> -->
+
+<link rel="stylesheet" href="{% static 'sentiment/css/analysis.css' %}">
+<link rel="stylesheet" href="{% static 'sentiment/css/animate.css' %}">
+<link rel="stylesheet" href="{% static 'sentiment/css/aos.css' %}">
+
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'sentiment/css/open-iconic-bootstrap.min.css' %}">
+
+<link rel="stylesheet" href="{% static 'sentiment/css/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'sentiment/css/owl.theme.default.min.css' %}">
+<link rel="stylesheet" href="{% static 'sentiment/css/magnific-popup.css' %}">
+
+<!-- <link rel="stylesheet" href="{% static 'sentiment/css/ionicons.min.css' %}"> -->
+
+<!-- <link rel="stylesheet" href="{% static 'sentiment/css/bootstrap-datepicker.css' %}"> -->
+<!-- <link rel="stylesheet" href="{% static 'sentiment/css/jquery.timepicker.css' %}"> -->
+
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+    nav {
+        background: rgb(35, 41, 49);
+    }
+
+    #movie-description {
+        text-align: justify;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-height: 25px;
+        /* fallback */
+        max-height: 80px;
+        line-clamp: 3;
+        /* fallback */
+        -webkit-line-clamp: 3;
+        box-orient: vertical;
+        /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+    .sentiment-body {
+        height: 40%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        color: white;
+    }
+
+    .rating {
+        height: 70%;
+        font-weight: bold;
+        font-size: 3em;
+        text-align: center;
+        padding: 5% 0;
+        border-bottom: 1px solid rgb(56, 51, 51);
+    }
+
+    .type {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+        padding: 10px 0;
+    }
+
+    .review-container {
+        background: rgb(242, 242, 245);
+        color: rgb(53, 53, 53);
+        padding: 2%;
+        margin-bottom: 5%;
+        border-radius: 10px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .review-header span img {
+        width: 40px;
+        border-radius: 50%;
+    }
+
+    .review-header {
+        color: rgb(53, 53, 53);
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+    }
+
+    .snippet {
+        text-align: justify;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-height: 25px;
+        /* fallback */
+        max-height: 80px;
+        line-clamp: 3;
+        /* fallback */
+        -webkit-line-clamp: 3;
+        box-orient: vertical;
+        /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+    .review-btn {
+        border: none;
+        background: none;
+        color: rgb(0, 174, 255);
+    }
+
+    .review-btn:hover {
+        text-decoration: underline;
+    }
+
+    .show-btn {
+        display: block;
+    }
+
+    .hide-btn {
+        display: none;
+    }
+
+    .header {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: none !important;
+    }
+
+    .entity {
+        max-height: 500px;
+        overflow: hidden;
+    }
+
+    .entity-card {
+        padding: 0;
+        box-shad-webkit-box-shadow: 1px 4px 15px -1px rgba(0, 0, 0, 0.46);
+        -moz-box-shadow: 1px 4px 15px -1px rgba(0, 0, 0, 0.46);
+        box-shadow: 1px 4px 15px -1px rgba(0, 0, 0, 0.46);
+    }
+
+    .entity-pic {
+        position: relative;
+    }
+
+    .entity-type {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .entity-type h3 {
+        font-family: 'Roboto', sans-serif;
+        color: white;
+    }
+
+    .entity-list {
+        padding: 5%;
+    }
+
+    .entity-list ul li {
+        list-style: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="hero-wrap js-fullheight"
+    style="background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url({% static 'movietime/images/netflix-background.jpg' %})"
+    data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-end"
+            data-scrollax-parent="true">
+            <div class="d-flex justify-content-between">
+                <div class="ml-auto mr-auto">
+                    <img src="{{movie.poster.url}}" width="300" alt="">
+                </div>
+                <div class=" col-md-7 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
+                    <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">{{movie.title}}
+                    </h1>
+                    <p id="movie-description" class="mb-4"
+                        data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">{{movie.summary}}
+                    </p>
+                    <p class="d-flex align-items-center">
+                        <a href="{{movie.video.url}}"
+                            class="icon-video popup-vimeo d-flex justify-content-center align-items-center mr-3">
+                            <span class="ion-ios-play"><i class="fas fa-play"></i></span>
+                        </a>
+                        <span class="watch">Watch Trailer</span>
+                    </p>
+                    <div class="mt-5 d-flex justify-content-start">
+                        {% for genre in movie.genre.values %}
+                        <div class="mr-2"
+                            style="background: white; color:black; padding: 5px 10px; border-radius: 20px;">
+                            {{ genre.genre_name }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section ftco-no-pb ftco-no-pt">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="game-wrap-1 ftco-animate p-4">
+                    <div class="row p-2">
+                        <div class="col-md-6 pb-4 pb-lg-0 col-lg-3">
+                            <div class="pl-3 text d-flex">
+                                <h3><span><i style="color: yellow;" class="fab fa-imdb fa-2x"></i></span>
+                                    <span>IMDB rating</span>
+                                </h3>
+                                <div>
+                                    <h2><span style="color: white; font-weight: bold;">{{movie.rating}}<span
+                                                style="font-size: 15px; color: gray;">/10</span></span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pb-4 pb-lg-0 col-lg-3">
+                            <div class="d-flex text">
+                                <div>
+                                    <h3><span><i style="color:rgb(255, 72, 0);"
+                                                class="fas fa-fire-alt fa-2x"></i></span>
+                                        <span>Popularity</span>
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h2 style="color: white; font-weight:bold;">{{tmd_movies.popularity}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pb-4 pb-lg-0 col-lg-4">
+                            <div class="d-flex text">
+                                <div>
+                                    <h3><span><i style="color:rgba(53, 156, 53, 0.589);"
+                                                class="fas fa-money-bill-wave fa-2x"></i></span>
+                                        <span>Revenue</span>
+                                    </h3>
+                                </div>
+                                <div>
+                                    <h2 style="color: white; font-weight:bold;">{{tmd_movies.revenue|millify}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-auto mb-auto col-md-6 pb-4 pb-lg-0 col-lg-2">
+                            <div class="text">
+                                <p class="mb-0"><a data-toggle="modal" data-target="#myModal" href="#"
+                                        class="btn btn-primary py-3">Reviews</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span><img src="{% static 'sentiment/images/tmd_logo.png' %}" alt="TMDB logo"
+                            width="60"></span>
+                    Reviews ({{reviews_count}})</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div style="background: white;" class="modal-body">
+                {% for review, sentiment in reviews %}
+                <div class="review-container" class="mb-5">
+                    <div class="d-flex justify-content-between">
+                        <p class="review-header"><span><img src="{% static 'sentiment/images/anonymous.png' %}"
+                                    alt="Profile"></span>
+                            {{review.author}}
+                        </p>
+                        {% if sentiment == 'positive' %}
+                        <div style="background: green; height: 15px; padding: 0 5%; border-radius: 10px;"></div>
+                        {% else %}
+                        <div style="background: red; height: 15px; padding: 0 5%; border-radius: 10px;"></div>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <p class="snippet reviews">{{review.content}}</p>
+                    <button class="ml-auto mr-auto review-btn show-btn" type="button">Show More
+                        &#709;</button>
+                    <button class="ml-auto mr-auto review-btn hide-btn" type="button">Show Less
+                        &#708;</button>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="mt-3 btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% if reviews %}
+<section class="mt-5 sentiment_score">
+    <div style="border-radius: 5px; border: 1px solid rgb(226, 226, 226);" class="container p-2">
+        <div style="text-align: center; font-weight: bold; font-size: 2em;" class="header">Movie Sentiment</div>
+        <div style="padding: 0 10%;" class="d-flex justify-content-between">
+            {% if sentiment_score > 50 %}
+            <div>
+                <i style="font-size: 5em; color: rgb(104, 159, 56)" class="fas fa-smile-beam"></i>
+                <p>Overall: Positive</p>
+            </div>
+            {% elif sentiment_score < 50 %}
+            <div>
+                <i style="font-size: 5em; color: rgb(255, 23, 68)" class="fas fa-angry"></i>
+                <p>Overall: Negative</p>
+            </div>
+            {% else %}
+            <div>
+                <i style="font-size: 5em; color: gray" class="fas fa-meh"></i>
+                <p>Overall: Neutral</p>
+            </div>
+            {% endif %}
+            <div>
+                <div id="sentiment" data-sentiment="{{sentiment_score}}" class="c100">
+                    <span>{{sentiment_score}}%</span>
+                    <div class="slice">
+                        <div class="bar"></div>
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                <p>Sentiment Score</p>
+            </div>
+            <div>
+                <div id="confidence" data-confidence="{{confidence}}" class="c100">
+                    <span>{{confidence}}%</span>
+                    <div class="slice">
+                        <div class="bar"></div>
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                <p>Confidence</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div style="border-radius: 5px; border: 1px solid rgb(226, 226, 226);" class="container p-2">
+        <div style="text-align: center; font-weight: bold; font-size: 2em;" class="header">Sentiment Distribution</div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div style="height: 600px; padding: 5% 10%;">
+                    <div
+                        style="position:relative; height: 100%; background: linear-gradient(rgba(200, 247, 159, {{positive}}), rgb(104, 159, 56, {{positive}})), url({% static 'sentiment/images/sentiment-positive-face.jpeg' %}) no-repeat center center/cover">
+                        <div style="background: rgb(104, 159, 56)" class="sentiment-body">
+                            <div class="rating">{{positive}}</div>
+                            <div class="type">POSITIVE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div style="position:relative; height: 600px; padding: 5% 10%;">
+                    <div
+                        style="position:relative; height: 100%; background: linear-gradient(rgb(255, 23, 68, {{negative}}), rgb(255, 23, 68, {{negative}})), url({% static 'sentiment/images/sentiment-negative-face.jpeg' %}) no-repeat center center/cover">
+                        <div style="background: rgb(255, 23, 68)" class="sentiment-body">
+                            <div class="rating">{{negative}}</div>
+                            <div class="type">NEGATIVE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="wordcloud">
+    <div style="border-radius: 5px; border: 1px solid rgb(226, 226, 226);" class="container p-2">
+        <div style="text-align: center; font-weight: bold; font-size: 2em;" class="header">Word Cloud</div>
+        <div class="d-flex justify-content-center">
+            <img class="img-responsive" style="object-fit: cover;" src="data:image/png;base64,{{ wordcloud|safe }}"
+                width="1000">
+        </div>
+    </div>
+</section>
+
+<section class="mt-5 mb-5">
+    <div style="border-radius: 5px; border: 1px solid rgb(226, 226, 226);" class="container p-2">
+        <div style="text-align: center; font-weight: bold; font-size: 2em;" class="header">Entities</div>
+        <div id="entity-section" class="p-3 row justify-content-around">
+            {% if PERSON %}
+            <div class="entity-card col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="entity-pic">
+                    <img src="{% static 'sentiment/images/people.jpg' %}" width="100%">
+                    <div class="entity-type">
+                        <h3>PEOPLE</h3>
+                    </div>
+                </div>
+                <div class="entity-list content">
+                    <ul>
+                        {% for person in PERSON %}
+                        <li>⊹ {{person}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            {% if ORGANIZATION %}
+            <div class="entity-card col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="entity-pic">
+                    <img src="{% static 'sentiment/images/organization.jpg' %}" width="100%">
+                    <div class="entity-type">
+                        <h3>ORGANIZATION</h3>
+                    </div>
+                </div>
+                <div class="entity-list content">
+                    <ul>
+                        {% for organization in ORGANIZATION %}
+                        <li>⊹ {{organization}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            {% if LOCATION %}
+            <div class="entity-card col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="entity-pic">
+                    <img src="{% static 'sentiment/images/location.jpg' %}" width="100%">
+                    <div class="entity-type">
+                        <h3>LOCATION</h3>
+                    </div>
+                </div>
+                <div class="entity-list content">
+                    <ul>
+                        {% for location in LOCATION %}
+                        <li>⊹ {{location}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="mt-5 d-flex justify-content-center">
+            <button onclick="expand_entity()" id="show-btn" class="btn btn-primary">Expand</button>
+            <button onclick="collapse_entity()" id="hide-btn" class="btn btn-primary">Collapse</button>
+        </div>
+    </div>
+</section>
+
+{% else %}
+<div class="mt-5 mb-5 d-flex justify-content-center container text-center">
+    <div>
+        <img src="{% static 'sentiment/images/no-result.gif' %}" alt="">
+        <h4>Sorry, there are no reviews available for <span
+                style="color:rgb(0, 183, 255); font-weight: bold;">{{movie.title}}</span> at
+            the moment.</h4>
+        <button onclick="goBack()" class="mt-3 btn btn-primary"><i class="fas fa-long-arrow-alt-left"></i> Go
+            Back</button>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'sentiment/js/jquery.min.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery-migrate-3.0.1.min.js' %}"></script>
+<script src="{% static 'sentiment/js/popper.min.js' %}"></script>
+<script src="{% static 'sentiment/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery.stellar.min.js' %}"></script>
+<script src="{% static 'sentiment/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'sentiment/js/aos.js' %}"></script>
+<script src="{% static 'sentiment/js/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'sentiment/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'sentiment/js/scrollax.min.js' %}"></script>
+<script src="{% static 'sentiment/js/main.js' %}"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var entity_div = document.getElementById('entity-section');
+        var height = $('#entity-section').height();
+        var entity_show = document.getElementById('show-btn');
+        var entity_hide = document.getElementById('hide-btn');
+
+        if (height > 500) {
+            entity_div.classList.add('entity');
+            entity_show.style.display = 'block';
+            entity_hide.style.display = 'none';
+        }
+        else {
+            entity_show.style.display = 'none';
+            entity_hide.style.display = 'none';
+        }
+    });
+
+
+    function expand_entity() {
+        var entity_div = document.getElementById('entity-section');
+        var entity_show = document.getElementById('show-btn');
+        var entity_hide = document.getElementById('hide-btn');
+        entity_div.classList.remove('entity');
+        entity_show.style.display = 'none';
+        entity_hide.style.display = 'block';
+    }
+
+    function collapse_entity() {
+        var entity_div = document.getElementById('entity-section');
+        var entity_show = document.getElementById('show-btn');
+        var entity_hide = document.getElementById('hide-btn');
+        entity_div.classList.add('entity');
+        entity_show.style.display = 'block';
+        entity_hide.style.display = 'none';
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+
+    // Sentiment score
+    var sentiment = document.getElementById("sentiment");
+    var sentiment_score = Math.floor(sentiment.getAttribute("data-sentiment"));
+    var class_name = 'p' + sentiment_score;
+    sentiment.classList.add(class_name)
+
+    //Confidence score
+    var confidence = document.getElementById("confidence");
+    var confidence_score = Math.floor(confidence.getAttribute("data-confidence"));
+    var class_name_confidence = 'p' + confidence_score;
+    confidence.classList.add(class_name_confidence)
+
+
+    var show_btn = document.getElementsByClassName('show-btn');
+    var hide_btn = document.getElementsByClassName('hide-btn');
+
+    for (var i = 0; i < show_btn.length; i++) {
+        (function (index) {
+            show_btn[index].addEventListener('click', () => {
+                document.getElementsByClassName('reviews')[index].classList.remove('snippet')
+                show_btn[index].style.display = "none";
+                hide_btn[index].style.display = "block";
+            })
+        })(i)
+    }
+
+    for (var i = 0; i < hide_btn.length; i++) {
+        (function (index) {
+            hide_btn[index].addEventListener('click', () => {
+                document.getElementsByClassName('reviews')[index].classList.add('snippet')
+                hide_btn[index].style.display = "none";
+                show_btn[index].style.display = "block";
+            })
+        })(i)
+    }
+</script>
+{% endblock %}

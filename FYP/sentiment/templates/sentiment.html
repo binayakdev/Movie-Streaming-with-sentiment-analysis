@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'sentiment/css/style.css' %}">
+<style>
+    .navbar {
+        background: rgb(35, 168, 242);
+    }
+
+    .navbar {
+        box-shadow: 0 20px 0px -6px rgb(35, 168, 242);
+    }
+
+    .navbar-brand {
+        width: 70px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- particles.js container -->
+<div id="particles-js"></div>
+
+<!-- <div class="sentiment-wrapper" style="width: 100%;">
+    <div class="container">
+        <div class="header-img">
+            <img class="img-responsive" src="{% static 'sentiment/images/header-image.png' %}" alt="">
+        </div>
+        <div class=" sentiment-search">
+            <form action="{% url 'analysis' %}" style="width: 80%;">
+                <div class="form-group d-flex">
+                    <input class="form-control my-0 py-4 amber-border" type="text" name="title" placeholder="Search...">
+                    <button type="submit"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+<div class="desc">
+    <div class="container">
+        <div class="row justify-content-center">
+            <h1 class="mb-5" style="text-align: center;">Analyze the Sentiment of Tweets and Reviews.</h1>
+            <div class="col-12">
+                <p>As more and more content is created and shared online through Social Channels, Blogs, Review Sites
+                    etc. the need and desire for businesses to mine this information, in order to gain business insight
+                    from it, has also increased.</p>
+                <p>
+                    Welcome to the <span style="background: none; font-weight: bold;">Sentiment Analysis Tool</span>.
+                    MovieTime allows you to
+                    use the sentiment analysis tool on
+                    your favourite movies. Our platform extracts movie reviews from twitter to analyze it and provide
+                    you with a qualitative analysis on your movie of choice. Just write the title of any movie in the
+                    search bar above and wait for the magic!</p>
+            </div>
+            <div class="row justify-content-start">
+                <div class="col-4 mb-5 text-center mt-auto mb-auto">
+                    <img class="img-responsive" src="{% static 'sentiment/images/twitterbird.gif' %}" width="50%"
+                        alt="">
+                </div>
+                <div class="col-6 mb-5">
+                    <img src="{% static 'sentiment/images/workflow.jpg' %}" width="100%" alt="" class="img-responsive">
+                </div>
+            </div>
+            <div class="col-12">
+                <p>Detect sentiment of a document in terms of polarity (<span>positive</span>, <span>negative</span> and
+                    <span>neutral</span>)
+                    and
+                    subjectivity
+                    (<span>subjective</span> or <span>objective</span>).</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src=" {% static 'sentiment/js/particles.js' %}"></script>
+<script src="{% static 'sentiment/js/app.js' %}"></script>
+{% endblock %}

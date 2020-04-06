@@ -1,0 +1,376 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'movietime/css/movies.css' %}">
+<link rel="stylesheet" href="{% static 'movietime/css/movies_ext.css' %}">
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+    .showcase {
+        width: 100%;
+        min-height: 110vh;
+        position: relative;
+        background: linear-gradient(rgba(30, 27, 38, .8), rgba(30, 27, 38, .5)),
+        url("{% static 'movietime/images/milky-way-illustration.jpg' %}") center center/cover;
+        background-attachment: fixed;
+    }
+
+    .movie-navbar {
+        border-radius: 10px;
+        margin-bottom: 2%;
+    }
+
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 10px;
+        z-index: 100;
+        width: 30%;
+    }
+
+    .modal-title {
+        font-size: 1.3em;
+        font-family: 'Roboto', sans-serif;
+        color: rgb(29, 29, 29);
+    }
+
+    .modal-footer {
+        padding: 5%;
+        background: rgb(233, 233, 233);
+    }
+
+    .modal-footer button {
+        background: rgb(0, 174, 255);
+        border-bottom: 2px solid rgb(0, 135, 197);
+        width: 100% !important;
+        padding: 3% 0;
+        color: white;
+        font-size: 1.5em;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .features ul li {
+        list-style: none;
+        padding: 2%;
+        color: rgb(146, 146, 146);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% if movies %}
+<!-- Django messages section -->
+{% if messages %}
+{% for message in messages %}
+{% if message.extra_tags == 'Error' %}
+<div class="toast" role="alert" data-autohide="false" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <div><i style="color: red;" class="fas fa-exclamation-triangle mr-2"></i></div>
+        <strong class="mr-auto">{{message.extra_tags}}</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        {{message}}
+    </div>
+</div>
+{% else %}
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{message.extra_tags}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><i style="color: rgb(0, 153, 255);" class="fas fa-info-circle"></i> {{message}}</p>
+                <div>
+                    <h1 style="color: gray; font-weight: bold;"><span><img style="width: 100px;" class="img-responsive"
+                                src="{% static 'images/logo.png' %}" alt="" /></span> MOVIE TIME <i style="color: gold;"
+                            class="fas fa-unlock-alt"></i></h1>
+                </div>
+                <div style="padding:0 2%;" class="mt-2 features">
+                    <ul>
+                        <li><i class="fas fa-tv mr-2"></i> Get unlimited access to the MovieTime streaming library</li>
+                        <hr>
+                        <li><i class="fas fa-file-alt mr-2"></i> Check movie trailers, cast, directors, ratings, and
+                            other
+                            info.</li>
+                        <hr>
+                        <li><i class="fas fa-clock mr-2"></i> Watch your favourite movies anytime - anywhere.</li>
+                        <hr>
+                        <li><i class="far fa-chart-bar mr-2"></i> Get Sentiment Analysis tool to analyze all the
+                            exclusive
+                            movies.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-3" style="width: 100%; display: inline-block;"><a
+                        href="{% url 'profile' %}#subscription"><button type="button" class="btn btn-primary"><i
+                                style="color: rgb(83, 201, 255)" class="fas fa-gamepad"></i>
+                            Upgrade
+                            Account for
+                            only $15/mo</button></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+<!-- Add to favourites notification box -->
+<div id="fav-notify">
+    <p id="fav-notify-msg"></p>
+</div>
+
+<!-- This is the form that filters by genre -->
+<div id="genre-filter">
+    <div id="exit-filter"><i class="fas fa-times fa-lg"></i></div>
+    <h1 style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; color:rgb(50,50,50);">Filter
+        Movies by Genres</h1>
+    <form action="{% url 'by_genre' %}" method="GET">
+        <div class="row" style="max-height: 400px; overflow-y: auto;">
+            {% for genre in genres %}
+            <div class="mt-4 col-6 col-xl-3 col-lg-3 col-md-3 col-sm-5 col-xs-6"><input name="checks" type="checkbox"
+                    value={{genre.id}}>{{genre.genre_name}}
+            </div>
+            {% endfor %}
+            <hr>
+        </div>
+        <div class="w-50 mt-3 d-flex form-group mt-5">
+            <input class="form-control btn btn-primary rounded" type="submit">
+        </div>
+    </form>
+</div>
+<div class="container">
+    <nav class="movie-navbar navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Result for: <span style="color: rgb(32, 162, 242);">{{query}}</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><i class="fas fa-filter"></i> Filter
+                    </a>
+                    <div id="movie-dropdown" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/A-Z"><i class="fas fa-sort-alpha-down pr-4 text-muted"></i>
+                            A-Z</a>
+                        <a class="dropdown-item" href="/top_rated"><i class="fas fa-star pr-4 text-muted"></i>Top
+                            Rated</a>
+                        <a class="dropdown-item" href="/recent_releases"><i class="far fa-clock pr-4 text-muted"></i>
+                            Recent Release</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="genre-menu" class="dropdown-item" href="#"><i class="fas fa-video pr-4 text-muted"></i>By
+                            Genre</a>
+                    </div>
+                </li>
+            </ul>
+            {% if user.is_authenticated and user.is_staff == False and user.is_admin == False %}
+            <a class="favourites" href="/favourites/list"><i class="fas fa-th-list"></i> My List</a>
+            {% endif %}
+            <form action="/movies" class="form-inline my-2 my-lg-0">
+                <div class="right-inner-addon">
+                    <input type="search" name="movies" type="text" class="form-control" placeholder="Search" />
+                    <button type="submit" id="page-search"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </nav>
+    <!-- <a href="/favourites">Your list</a> -->
+    <div class="row">
+        <div id="overlay">
+        </div>
+        {% for movie in movies %}
+        <div class="container overview">
+            <div class="cellphone-container">
+                <div class="movie">
+                    <div class="menu"><i class="fas fa-times"></i></div>
+                    <div class="movie-img">
+                        <p class="youtube-token" style="display:none">{{movie.y_token}}</p>
+                        <iframe width="100%" height="100%" src="" frameborder="0" scrolling="no" allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="text-movie-cont">
+                        <div class="mr-grid">
+                            <div class="col1 col-11">
+                                <h1 style="text-align: start;">{{movie.title}}</h1>
+                                <ul class="movie-gen pt-2">
+                                    <li>{{movie.duration}} /</li>
+                                    <li>{% for genre in movie.genre.values %}
+                                        <strong>{{ genre.genre_name }}{% if not forloop.last %}, {% endif %}</strong>
+                                        {% endfor %}</li>
+                                </ul>
+                                <div class="rating d-flex justify-content-end">
+                                    <i class="fa fa-star pt-1" style="color: rgb(253,216, 53);"></i><span
+                                        class="pl-2 text-white">{{movie.rating}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mr-grid summary-row">
+                            <div class="col2">
+                                <h5>SUMMARY</h5>
+                            </div>
+                        </div>
+                        <div class="mr-grid">
+                            <div class="col1">
+                                <p class="movie-description">
+                                    <span class="summary">{{movie.summary}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mr-grid actors-row">
+                            <div class="col1">
+                                <p class="movie-actors">
+                                    <span class="casts">{{movie.cast}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        {% if user.is_authenticated and user.is_staff == False and user.is_admin == False %}
+                        <div class="mr-grid action-row">
+                            <div class="col2">
+                                <div class="watch-btn"><a href="/watch_movies/movie_id={{movie.id}}">
+                                        <h3>
+                                            <i class="fas fa-play"></i> WATCH MOVIE
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col6 action-btn">
+                                <a href="https://www.imdb.com/find?ref_=nv_sr_fn&q={{movie.title}}&s=all">
+                                    <i data-toggle="tooltip" title="Show in IMDB" style="color: yellow;"
+                                        class="fab fa-imdb"></i></a>
+                            </div>
+                            <div class="col6 action-btn"><a href="/sentiment/analysis/movie_id={{movie.id}}"><i
+                                        data-toggle="tooltip" title="Perform Sentiment Analysis"
+                                        style="color: whitesmoke;" class="fas fa-laugh-beam"></i></a>
+                            </div>
+                            <div class="col6 action-btn justify-content-end">
+                                {% if movie.id not in favourites %}
+                                <div><i data-href="{% url 'favourite_movie' id=movie.id %}" data-toggle="tooltip"
+                                        title="Add to Favourites" style="color: rgb(32, 162, 242);"
+                                        class="fav-add-icon far fa-bookmark"></i>
+                                </div>
+                                {% else %}
+                                <div><i data-href="{% url 'favourite_movie' id=movie.id %}" data-toggle="tooltip"
+                                        title="Remove from Favourites" style="color: rgb(32, 162, 242);"
+                                        class="fav-add-icon fas fa-bookmark"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="mr-grid action-row">
+                            <div class="d-flex">
+                                <div>
+                                    <p>You are not logged in</p>
+                                </div>
+                                <div style="width:auto !important;" class="mr-2 ml-2 watch-btn"><a
+                                        href="{% url 'login' %}">
+                                        <h3>
+                                            <i class="fas fa-sign-in-alt"></i> Sign In
+                                        </h3>
+                                    </a>
+                                </div>
+                                <div>
+                                    <p>or</p>
+                                </div>
+                                <div style="width:auto !important;" class="mr-2 ml-2 watch-btn"><a
+                                        href="{% url 'choose_plan' %}">
+                                        <h3>
+                                            <i class="fas fa-user-circle"></i> Sign Up
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- GRID listing of movies -->
+        <div class="col-4 col-lg-3 col-xl-2 col-md-3 movie-container">
+            {% if movie.id in favourites %}
+            <div class="bookmarked" movie-id="{{movie.id}}">
+                <i style="color: rgb(6, 119, 21);" class="bookmarked_icon fas fa-bookmark fa-lg"></i>
+            </div>
+            {% else %}
+            <div class="bookmarked" movie-id="{{movie.id}}">
+                <i style="color: rgb(6, 119, 21);" class="bookmarked_icon fas fa-lg"></i>
+            </div>
+            {% endif %}
+            <div class="movie clickable" class="mr-0">
+                <img class="img-resonsive" src="{{ movie.poster.url }}" alt="Video" height="220" width="150">
+                <p class="video-url" style="display: none;">{{ movie.video.url }}</p>
+                <!-- <p class="movie-title">{{ movie.title }}</p> -->
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        <span class="current">
+            Page {{ movies.number }} of {{ movies.paginator.num_pages }}.
+        </span>
+        <br>
+        {% if movies.has_previous %}
+        <a href="?page=1"><button>First</button></a>
+        <a href="?page={{ movies.previous_page_number }}"><button><i class="fas fa-angle-double-left"></i></button>
+            {% endif %}
+            {% if movies.has_next %}
+            <a href="?page={{ movies.next_page_number }}"><button><i class="fas fa-angle-double-right"></i></button></a>
+            <a href="?page={{ movies.paginator.num_pages }}"><button>Last</button></a>
+            {% endif %}
+    </span>
+</div>
+{% else %}
+<div class="container">
+    <div class="search-failed p-3">
+        <p>You searched for: <span>{{ query }}</span></p>
+        <h1>Sorry we couldn't find any matches.</h1>
+        <p>Maybe your search was too specific, please try searching with another term.</p>
+        <p>You can do an empty search to see all the movies.</p>
+        <form action="/movies" class="form-inline my-2 my-lg-2 justify-content-center pb-3">
+            <div class="d-flex justify-content-center right-inner-addon">
+                <input type="search" name="movies" type="text" class="form-control" placeholder="Search" />
+                <button type="submit" id="failed-search"
+                    style="background: rgb(32, 162, 242); color: white; padding: 6px 10px; border-radius: 5px; border:none;"><i
+                        class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <div class="fail-reasons"></div>
+        <img class="img-resonsive" src="{% static 'movietime/images/broken-search.png' %}" alt="">
+        <div class="container recommend">
+            <h5 style="color:rgb(32, 162, 242);">We have some suggestions for you</h5>
+            <br>
+            <div class="row">
+                {% for movie in suggestions %}
+                <div class="col-12 col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-12 query"><a
+                        href="/movies?movies={{movie.title}}">{{movie.title}}</a></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script src="{% static 'movietime/js/movie.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Modal").modal();
+        $('.toast').toast('show');
+    });
+</script>
+{% endblock %}

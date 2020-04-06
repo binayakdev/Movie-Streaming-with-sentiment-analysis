@@ -1,0 +1,101 @@
+{% extends 'admin-panel/panel-layout.html' %}
+{% load static %}
+
+{% block style %}
+<!-- Custom styles for this page -->
+<link href="{% static 'Admin/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
+<style>
+    .title {
+        color: rgb(59, 59, 59);
+        font-weight: bold;
+    }
+
+    .movie-img {
+        height: 150px;
+        width: 110px;
+        border-radius: 10px;
+    }
+
+    .quality {
+        background: red;
+        font-size: 14px;
+        padding: 2px;
+        width: 80%;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-2 text-gray-800">Movie</h1>
+<p class="mb-4">This page shows the details of the all the movies that are currently being streaming in the website.</p>
+
+<!-- Movie Details -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Movie Details</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Poster</th>
+                        <th>Title</th>
+                        <th>Cast</th>
+                        <th>Director</th>
+                        <th>Quality</th>
+                        <th>Rating</th>
+                        <th>Release</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Poster</th>
+                        <th>Title</th>
+                        <th>Cast</th>
+                        <th>Director</th>
+                        <th>Quality</th>
+                        <th>Rating</th>
+                        <th>Release</th>
+                        <th>Summary</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for movie in movies %}
+                    <tr>
+                        <td><img class="img-responsive movie-img" src="{{ movie.poster.url }}" alt=""></td>
+                        <td class="title">{{ movie.title }}</td>
+                        <td>{{ movie.cast}}</td>
+                        <td>{{ movie.director }}</td>
+                        <td>
+                            <div class="quality">
+                                {{ movie.quality }}
+                            </div>
+                        </td>
+                        <td><i class="fas fa-star" style="color: rgba(255, 238, 0, 0.842);"></i> {{ movie.rating }}
+                        </td>
+                        <td>{{ movie.release_date }}</td>
+                        <td>{{ movie.summary }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<!-- Page level plugins -->
+<script src="{% static 'Admin/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'Admin/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'Admin/js/demo/datatables-demo.js' %}"></script>
+{% endblock %}
