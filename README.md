@@ -30,4 +30,10 @@ command: `python -m smtpd -n -c DebuggingServer localhost:1025`
 | Pillow | Database | `conda install Pillow` |
 | django-crsipy-forms | HTML forms | `conda install django-crispy-forms` |
 | stripe | API | `conda install stripe` |
-| tweepy | API | `conda install tweepy` *(Not is use)* |
+| pandas | Data analysis and manipulation | `conda install -c anaconda pandas` |
+| bs4 | Parsing HTML & XML | `conda install -c anaconda beautifulsoup4` |
+| nltk | Natural language processing | `conda install -c anaconda nltk` |
+| wordcloud | Parsing text | `conda install -c conda-forge wordcloud` |
+| pickle | Serialization and De-serialization | `conda install -c conda-forge pickle5` |
+| scikit-learn | machine learning | `conda install -c anaconda scikit-learn=0.20.3` |
+| lxml | XML and HTML processing | `conda install -c anaconda lxml` |
