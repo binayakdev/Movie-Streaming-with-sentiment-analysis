@@ -18,6 +18,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
 
+
 def admin_login_required(f):
     def wrap(request, *args, **kwargs):
         # This check the session if the userid key exists, if not it will redirect to login page
@@ -60,6 +61,7 @@ def admin_register(request):
             user = form.save(commit=False)
             user.is_admin = True
             user.is_superuser = True
+            user.is_active = False
             user.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
@@ -67,9 +69,11 @@ def admin_register(request):
     else:
         form = UserAdminRegisterForm()
     return render(request, 'admin-register.html', {'form': form})
-    
+
+
 def give_date(unix):
     return datetime.utcfromtimestamp(int(unix)).strftime('%Y-%b-%d')
+
 
 @admin_login_required
 def index(request):
@@ -77,7 +81,8 @@ def index(request):
 
     users_count = Profile.objects.filter(is_superuser=0).count()
     movies_count = Movie.objects.all().count()
-    active_count = Profile.objects.filter(Q(is_active=1) & Q(is_superuser=0)).count()
+    active_count = Profile.objects.filter(
+        Q(is_active=1) & Q(is_superuser=0)).count()
     active_perc = round((active_count / users_count) * 100)
 
     context['title'] = 'Dashboard'
@@ -88,15 +93,17 @@ def index(request):
         stripe_balance = stripe.Balance.retrieve()
         balance = stripe_balance.available[0].amount / 100
         subscribers = UserSubscription.objects.all().count()
-        subscriber_perc = round((subscribers / users_count)  * 100)
+        subscriber_perc = round((subscribers / users_count) * 100)
         transactions = stripe.BalanceTransaction.list()
 
         transaction_aggr = {}
         for transaction in transactions:
             if give_date(transaction.created) in transaction_aggr.keys():
-                transaction_aggr[give_date(transaction.created)] += transaction.net/100
+                transaction_aggr[give_date(
+                    transaction.created)] += transaction.net/100
             else:
-                transaction_aggr[give_date(transaction.created)] = transaction.net/100
+                transaction_aggr[give_date(
+                    transaction.created)] = transaction.net/100
         print(transaction_aggr)
 
         transaction_amount = list(transaction_aggr.values())
@@ -142,11 +149,13 @@ def admin_movies(request):
 
     return render(request, 'admin-panel/panel-movies.html', context)
 
+
 @admin_login_required
 def admin_subscribers(request):
     subscribers = UserSubscription.objects.all()
     sub = [subscriber.user.id for subscriber in subscribers]
-    free_users = Profile.objects.filter(is_superuser=False).filter(~Q(id__in=sub))
+    free_users = Profile.objects.filter(
+        is_superuser=False).filter(~Q(id__in=sub))
     plans = SubscriptionPlan.objects.all()
     plan = [plan.membership_type for plan in plans]
     user_count = [len(subscribers), len(free_users)]
@@ -160,6 +169,7 @@ def admin_subscribers(request):
     }
 
     return render(request, 'admin-panel/panel-subscribers.html', context)
+
 
 @admin_login_required
 def admin_stripe(request):
@@ -194,5 +204,3 @@ def admin_stripe(request):
         context = {}
         context['stripe_error'] = e
         return render(request, 'admin-panel/panel-stripe.html', context)
-
-    

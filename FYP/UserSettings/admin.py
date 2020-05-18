@@ -6,11 +6,12 @@ from .forms import UserRegisterForm, CustomUserChangeForm
 from .models import Profile, SubscriptionPlan, UserSubscription
 
 # Register your models here.
+
+
 class CustomUserAdmin(UserAdmin):
     add_form = UserRegisterForm
-    form = CustomUserChangeForm
     model = Profile
-    list_display = ['bio', 'avatar']
+    list_display = ['username', 'avatar']
 
 
 admin.site.register(Profile, CustomUserAdmin)
