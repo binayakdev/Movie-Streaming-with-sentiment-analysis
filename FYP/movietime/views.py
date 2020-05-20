@@ -30,13 +30,17 @@ def user_login_required(f):
     wrap.__name__ = f.__name__
     return wrap
 
+
 def handler404(request, *args, **kwargs):
     return render(request, '404.html')
+
 
 def handler500(request, *args, **kwargs):
     return render(request, '500.html')
 
 # This function renders the home page of the website
+
+
 def index(request):
     context = {
         'title': 'MovieTime: Watch your favorite movies and also analyze the movies with sentiment analysis',
@@ -87,7 +91,8 @@ def movies(request):
     if request.session['search_query'] == "":
         movies = Movie.objects.all()
     else:
-        movies = Movie.objects.filter(Q(title__icontains=request.session['search_query']))
+        movies = Movie.objects.filter(
+            Q(title__icontains=request.session['search_query']))
 
     if not movies:
         random_movies = Movie.objects.raw(
@@ -186,10 +191,12 @@ def by_genre(request):
         request.session['genres'] = genres
 
         if not genres:
-            messages.info(request, f'You have to select at least on genre to filter the movies', extra_tags="Error")
+            messages.info(
+                request, f'You have to select at least one genre to filter the movies', extra_tags="Error")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    movies = Movie.objects.filter(genre__id__in=request.session['genres']).distinct()
+    movies = Movie.objects.filter(
+        genre__id__in=request.session['genres']).distinct()
     movies_by_genre = pagination(request, movies)
     favourites = is_bookmarked(request, movies)
 
