@@ -39,11 +39,17 @@
                         <a class="nav-link" href="/">Home
                         </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="{% url 'sentiment_index' %}">Sentiment Analysis</a>
-                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" href="/about" style="margin-bottom: 15px;">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin-index' %}" style="margin-bottom: 15px;"><i
+                                class="fas fa-user-cog"></i>
+                            Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superuser/" style="margin-bottom: 15px;"><i class="fas fa-key"></i>
+                            Superuser</a>
                     </li>
                 </ul>
                 {% if user.is_authenticated and user.is_staff == False and user.is_admin == False %}
