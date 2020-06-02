@@ -5,6 +5,18 @@ from collections import defaultdict
 
 class SentimentModule(SimpleTestCase):
 
+    def test_predict_function(self):
+        print("\nTesting the predict function..\n")
+
+        test_review = [
+            'I loved this movie. It is the best one I have watched so far!!']
+        test_review_sentiment = 'positive'
+
+        test_review_result = predict(test_review)[0]
+        print(test_review_result)
+
+        self.assertEquals(test_review_result, test_review_sentiment)
+
     def test_entity_classfier_function(self):
         print("\nTesting the entity classifier..\n")
 
@@ -23,14 +35,4 @@ class SentimentModule(SimpleTestCase):
 
         self.assertDictEqual(entity_classifier_result, entity)
 
-def test_predict_function(self):
-    print("\nTesting the predict function..\n")
 
-    test_review = [
-        'I loved this movie. It is the best one I have watched so far!!']
-    test_review_sentiment = 'positive'
-
-    test_review_result = predict(test_review)[0]
-    print(test_review_result)
-
-    self.assertEquals(test_review_result, test_review_sentiment)
