@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls import handler404, handler500
 from movietime import views as movietime_views
 
 urlpatterns = [
@@ -27,6 +26,3 @@ urlpatterns = [
     path('sentiment/', include('sentiment.urls')),
     path('accounts/', include('UserSettings.urls')),
 ]
-
-handler404 = movietime_views.handler404
-handler500 = movietime_views.handler500
