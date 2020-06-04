@@ -5,6 +5,8 @@ from django.forms import TextInput, Textarea
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 
+# This is the registration form
+
 
 class UserRegisterForm(UserCreationForm):
     bio = forms.CharField(max_length=500, widget=forms.Textarea(
@@ -14,6 +16,8 @@ class UserRegisterForm(UserCreationForm):
         model = Profile
         fields = ['first_name', 'last_name',
                   'username', 'email', 'bio', 'avatar']
+
+# This is the login form
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -26,6 +30,8 @@ class CustomUserChangeForm(UserChangeForm):
             'username': None,
             'password': None,
         }
+
+# This is the profile edit form
 
 
 class CustomUserEditForm(UserChangeForm):
@@ -43,12 +49,16 @@ class CustomUserEditForm(UserChangeForm):
             'avatar',
         ]
 
+# This is the password reset form that asks for email
+
 
 class UserPasswordResetForm(PasswordResetForm):
 
     class Meta:
         model = Profile
         fields = ('email',)
+
+# This is the password reset form that asks for the password
 
 
 class UserPasswordResetConfirmForm(SetPasswordForm):

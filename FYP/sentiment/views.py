@@ -25,10 +25,11 @@ from nltk.stem import WordNetLemmatizer
 from collections import Counter
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
- 
+
 from nltk.tag import StanfordNERTagger
 
 # Create your views here.
+
 
 def subscription_required(f):
     def wrap(request, *args, **kwargs):
@@ -41,12 +42,14 @@ def subscription_required(f):
         subscribed = UserSubscription.objects.filter(user=user).exists()
 
         if subscribed == False:
-            messages.info(request, 'You have no subscription.', extra_tags="Oh Snap! You need to upgrade your account to perform Sentiment Analysis.")
+            messages.info(request, 'You have no subscription.',
+                          extra_tags="Oh Snap! You need to upgrade your account to perform Sentiment Analysis.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             subscription = UserSubscription.objects.get(user=user)
             if subscription.active == 0:
-                messages.info(request, 'You need to activate your subscription', extra_tags="Oh Snap! You need to activate your account to perform Sentiment Analysis.")
+                messages.info(request, 'You need to activate your subscription',
+                              extra_tags="Oh Snap! You need to activate your account to perform Sentiment Analysis.")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         return f(request, *args, **kwargs)
@@ -58,6 +61,18 @@ def subscription_required(f):
 @user_login_required
 def index(request):
     return render(request, 'sentiment.html')
+
+
+'''
+This class creates the basic pipeline for the text pre-processing
+It has the following steps in the pipeline:
+1. Removing html from the text
+2. Removing punctuation, user tags, emails, etc.
+3. Removing numbers
+4. Removing stop words (the, it, make, most, etc..)
+5. Lemmatizing the texts
+6. Generating word cloud
+'''
 
 
 class TextPreprocessor:
@@ -100,6 +115,7 @@ class TextPreprocessor:
         wordcloud = WordCloud(stopwords=stopwords,
                               background_color="white").generate(text)
         plt.figure(figsize=(20, 10))
+        # bilinear interpolation makes the edges of the image sharp
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
 
@@ -114,6 +130,8 @@ class TextPreprocessor:
         return graphic
 
 
+# This functions uses the machine learning model to predict the sentiment in texts
+# It returns the predicted classes, wordcloud and prediction porbabilities
 def predict(reviews):
     data = pd.DataFrame(reviews, columns=['reviews'])
     # data['reviews'] = data['reviews'].apply(lambda x: TextPreprocessor.remove_html(x))
@@ -127,6 +145,9 @@ def predict(reviews):
     # data['reviews'] = data['reviews'].apply(lambda x: TextPreprocessor.word_lemmatizer(x))
 
     return SentimentConfig.estimator.predict(data['reviews']), wordcloud, SentimentConfig.estimator.predict_proba(data['reviews'])
+
+# This function uses the Stanford NER tagger to classify the entities in a texts
+# It returns the classified entities
 
 
 def classify_entity(reviews):
@@ -162,7 +183,8 @@ def analysis(request, id):
             url=f'https://api.themoviedb.org/3/movie/{review_id}?api_key={api_key}&language=en-US'
         )
     except requests.exceptions.RequestException as e:
-        messages.info(request, "Internal Server Error! Sorry, cannot perform sentiment analysis. Check your internet or try again later.", extra_tags="Error")
+        messages.info(
+            request, "Internal Server Error! Sorry, cannot perform sentiment analysis. Check your internet or try again later.", extra_tags="Error")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     tmd_movies = movies_response.json()  # Get the movies
@@ -175,7 +197,7 @@ def analysis(request, id):
     if reviews:
         prediction, wordcloud, prob = predict(reviews)
         entities = classify_entity(reviews)
-        
+
         confidence = 0
         total_prob = len(prob)
         for values in prob:
@@ -217,21 +239,3 @@ def analysis(request, id):
             'tmd_movies': tmd_movies,
         }
         return render(request, 'analysis.html', context)
-
-# Twitter API usage (Not in use)
-
-# consumer_key = settings.TWITTER_CONSUMER_KEY
-# consumer_secret = settings.TWITTER_CONSUMER_SECRET
-# access_token = settings.TWITTER_ACCESS_TOKEN
-# access_token_secret = settings.TWITTER_ACCESS_TOKEN_SECRET
-# title = Movie.objects.get(id=id).title
-# print(title)
-# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-# auth.set_access_token(access_token, access_token_secret)
-# api = tweepy.API(auth, wait_on_rate_limit=True)
-# public_tweets = list(tweepy.Cursor(
-#     api.search, q=title, lang="en", tweet_mode="extended", result_type="mixed").items(10))
-
-# for tweets in public_tweets:
-#     print(tweets.full_text)
-# api = tweepy.API(auth)

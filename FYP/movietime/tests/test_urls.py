@@ -2,6 +2,8 @@ from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from movietime.views import index, about, movies, watch_movies, recent_releases, chronological, top_rated, by_genre, list_favourites
 
+#  This test checks of the URL routes can be resolved to their corresponding view functions.
+
 
 class TestUrls(SimpleTestCase):
 

@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = ['username', 'avatar']
 
 
+# Registering the models in the superuser panel
 admin.site.register(Profile, CustomUserAdmin)
 admin.site.register(SubscriptionPlan)
 admin.site.register(UserSubscription)

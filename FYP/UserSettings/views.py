@@ -20,7 +20,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 
 
-#To do getting the redirect login url from settings.
+# To do getting the redirect login url from settings.
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -45,9 +45,9 @@ def login(request):
 
 # Creating a new customer in stripe
 def create_customer(payment_method, email):
-    customer = stripe.Customer.create (
-        payment_method= payment_method,
-        email = email,
+    customer = stripe.Customer.create(
+        payment_method=payment_method,
+        email=email,
         invoice_settings={
             'default_payment_method': payment_method,
         }
@@ -55,11 +55,13 @@ def create_customer(payment_method, email):
 
     return customer
 
-#Creating a new subscription for a customer in stripe
+# Creating a new subscription for a customer in stripe
+
+
 def create_subscription(customer_id, plan_id):
-    subscription = stripe.Subscription.create (
-        customer = customer_id,
-        items = [
+    subscription = stripe.Subscription.create(
+        customer=customer_id,
+        items=[
             {
                 'plan': plan_id,
             }
@@ -69,12 +71,15 @@ def create_subscription(customer_id, plan_id):
 
     return subscription
 
-#Choosing the type of plan you want to signup with
+# Choosing the type of plan you want to signup with
+
+
 def choose_plan(request):
     if request.user.is_superuser == False and request.user.is_authenticated:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    premium_plan = SubscriptionPlan.objects.filter(membership_type='Premium').first()
+    premium_plan = SubscriptionPlan.objects.filter(
+        membership_type='Premium').first()
     free_plan = SubscriptionPlan.objects.filter(membership_type='Free').first()
 
     context = {
@@ -85,12 +90,15 @@ def choose_plan(request):
 
     return render(request, 'editplan.html', context)
 
-#Reviewing the subscription before registering
+# Reviewing the subscription before registering
+
+
 def review_subscription(request, subscription_type):
     if request.user.is_superuser == False and request.user.is_authenticated:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    premium_plan = SubscriptionPlan.objects.filter(membership_type=subscription_type).first()
+    premium_plan = SubscriptionPlan.objects.filter(
+        membership_type=subscription_type).first()
 
     context = {
         'title': 'Review Plan',
@@ -100,7 +108,7 @@ def review_subscription(request, subscription_type):
     return render(request, 'checkout.html', context)
 
 
-#Register either with premium or free account
+# Register either with premium or free account
 def register(request, plan):
     if request.user.is_superuser == False and request.user.is_authenticated:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -114,15 +122,17 @@ def register(request, plan):
         }
         if form.is_valid():
             if plan == 'Premium':
-                try: 
+                try:
                     payment_method = request.POST.get('paymentMethod')
                     email = form.cleaned_data['email']
                     # Creating a new customer for payment
                     customer = create_customer(payment_method, email)
 
                     # Creating a subscription plan for the customer
-                    plan = SubscriptionPlan.objects.get(membership_type='Premium')
-                    subscription = create_subscription(customer.id, plan.stripe_plan_id)
+                    plan = SubscriptionPlan.objects.get(
+                        membership_type='Premium')
+                    subscription = create_subscription(
+                        customer.id, plan.stripe_plan_id)
 
                     user = form.save()
                     profile = Profile.objects.get(id=user.id)
@@ -135,34 +145,39 @@ def register(request, plan):
                     user_subscription.stripe_subscription_id = subscription.id
                     user_subscription.save()
 
-                    #Sending email upon successful registration
+                    # Sending email upon successful registration
                     subject = 'Congratulations!! Your account has been successfully created.'
                     message = 'You are subscribed to the premium access. You will be charged $15 monthly.'
                     from_mail = 'MovieTime'
                     email_to = profile.email
                     send_mail(subject, message, from_mail, [email_to])
-                    
+
                     username = form.cleaned_data.get('username')
-                    messages.success(request, f'Account created for {username}!')
+                    messages.success(
+                        request, f'Account created for {username}!')
                     return redirect('login')
                 except stripe.error.APIConnectionError as e:
-                    messages.warning(request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
+                    messages.warning(
+                        request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
                     return redirect('login')
                 except stripe.error.RateLimitError as e:
-                    messages.warning(request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
+                    messages.warning(
+                        request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
                     return redirect('login')
                 except stripe.error.AuthenticationError as e:
-                    messages.warning(request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
+                    messages.warning(
+                        request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
                     return redirect('login')
                 except stripe.error.StripeError as e:
-                    messages.warning(request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
+                    messages.warning(
+                        request, 'Sorry couldn\'t register right now. Internal server error. Try agan later.')
                     return redirect('login')
             elif plan == 'Free':
                 form.save()
                 username = form.cleaned_data.get('username')
                 email = form.cleaned_data.get('email')
 
-                #Sending email upon successful registration
+                # Sending email upon successful registration
                 subject = 'Congratulations!! Your account has been successfully created.'
                 message = 'You are subscribed to the free access. You can upgrade your account in the future if you wish.'
                 from_mail = 'MovieTime'
@@ -180,7 +195,7 @@ def register(request, plan):
         }
     return render(request, 'register.html', context)
 
-
+# This function renders the profile page
 @user_login_required
 def profile(request):
     context = {}
@@ -199,7 +214,6 @@ def profile(request):
             user_sub = UserSubscription.objects.get(user=user)
             sub = stripe.Subscription.retrieve(user_sub.stripe_subscription_id)
 
-
             context['status'] = sub.status
             context['billing'] = sub.billing
 
@@ -210,38 +224,44 @@ def profile(request):
             ts2 = int(end_date_unix)
             if cancelled_at_unix is not None:
                 ts3 = int(cancelled_at_unix)
-                context['cancelled_at'] = datetime.utcfromtimestamp(ts3).strftime('%Y-%m-%d %H:%M:%S')
+                context['cancelled_at'] = datetime.utcfromtimestamp(
+                    ts3).strftime('%Y-%m-%d %H:%M:%S')
 
-            context['start_date'] = datetime.utcfromtimestamp(ts1).strftime('%Y-%m-%d %H:%M:%S')
-            context['end_date'] = datetime.utcfromtimestamp(ts2).strftime('%Y-%m-%d %H:%M:%S')
-            
+            context['start_date'] = datetime.utcfromtimestamp(
+                ts1).strftime('%Y-%m-%d %H:%M:%S')
+            context['end_date'] = datetime.utcfromtimestamp(
+                ts2).strftime('%Y-%m-%d %H:%M:%S')
 
             # Plan information
             context['plan'] = sub['items'].data[0].plan.active
             context['currency'] = sub['items'].data[0].plan.currency
             context['trial'] = sub['items'].data[0].plan.trial_period_days
             context['product_id'] = sub['items'].data[0].plan.product
-            
+
         except stripe.error.APIConnectionError as e:
             context['stripe_error'] = e
-            messages.warning(request, 'Couldn\'t retrieve account plan information. Internal server error.')
+            messages.warning(
+                request, 'Couldn\'t retrieve account plan information. Internal server error.')
             return render(request, 'profile/user_profile.html', context)
         except stripe.error.RateLimitError as e:
             context['stripe_error'] = e
-            messages.warning(request, 'Couldn\'t retrieve account plan information. Internal server error.')
+            messages.warning(
+                request, 'Couldn\'t retrieve account plan information. Internal server error.')
             return render(request, 'profile/user_profile.html', context)
         except stripe.error.AuthenticationError as e:
             context['stripe_error'] = e
-            messages.warning(request, 'Couldn\'t retrieve account plan information. Internal server error.')
+            messages.warning(
+                request, 'Couldn\'t retrieve account plan information. Internal server error.')
             return render(request, 'profile/user_profile.html', context)
         except stripe.error.StripeError as e:
             context['stripe_error'] = e
-            messages.warning(request, 'Couldn\'t retrieve account plan information. Internal server error.')
+            messages.warning(
+                request, 'Couldn\'t retrieve account plan information. Internal server error.')
             return render(request, 'profile/user_profile.html', context)
-        
+
     return render(request, 'profile/user_profile.html', context)
 
-
+# This functions updates the user details
 @user_login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -259,7 +279,7 @@ def edit_profile(request):
         form = CustomUserEditForm(instance=request.user)
         return render(request, 'profile/edit_profile.html', {'title': 'Edit Profile', 'form': form})
 
-
+# This function changes the password of the user
 @user_login_required
 def change_password(request):
     if request.method == 'POST':
@@ -276,14 +296,15 @@ def change_password(request):
             return redirect('change_password')
     else:
         form = PasswordChangeForm(user=request.user)
-        return render(request, 'profile/change_password.html', {'title': 'Change Password','form': form})
+        return render(request, 'profile/change_password.html', {'title': 'Change Password', 'form': form})
 
-
+# Renders the delete profile page
 @user_login_required
 def settings(request):
     return render(request, 'profile/settings.html', {'title': 'Profile Settings'})
 
-
+# The user account is deleted
+# Also all the stripe objects are deleted before deleting the account
 @user_login_required
 def del_user(request):
     try:
@@ -291,20 +312,24 @@ def del_user(request):
         user_sub = UserSubscription.objects.get(user=user)
 
         if user_sub is not None:
-            try: 
+            try:
                 cust = stripe.Customer.retrieve(user_sub.stripe_customer_id)
                 cust.delete()
             except stripe.error.APIConnectionError as e:
-                messages.info(request, 'Sorry, could not delete user. Try again later')
+                messages.info(
+                    request, 'Sorry, could not delete user. Try again later')
                 return redirect('profile')
             except stripe.error.RateLimitError as e:
-                messages.info(request, 'Sorry, could not delete user. Try again later')
+                messages.info(
+                    request, 'Sorry, could not delete user. Try again later')
                 return redirect('profile')
             except stripe.error.AuthenticationError as e:
-                messages.info(request, 'Sorry, could not delete user. Try again later')
+                messages.info(
+                    request, 'Sorry, could not delete user. Try again later')
                 return redirect('profile')
             except stripe.error.StripeError as e:
-                messages.info(request, 'Sorry, could not delete user. Try again later')
+                messages.info(
+                    request, 'Sorry, could not delete user. Try again later')
                 return redirect('profile')
 
         user.delete()
@@ -316,14 +341,17 @@ def del_user(request):
         messages.warning(request, e.message)
         return redirect('profile')
 
-#Upgrade the account for free to premium
+# Upgrade the account for free to premium
+# New subscription is created for the user in stripe
+# The user subscription details in added to the table
 @user_login_required
 def upgrade_account(request):
     user = Profile.objects.get(id=request.user.id)
     subscribed = UserSubscription.objects.filter(user=user).exists()
 
     if not subscribed:
-        premium_plan = SubscriptionPlan.objects.filter(membership_type='Premium').first()
+        premium_plan = SubscriptionPlan.objects.filter(
+            membership_type='Premium').first()
 
         context = {
             'plan': premium_plan,
@@ -333,6 +361,7 @@ def upgrade_account(request):
     else:
         messages.info(request, f'You plan has already been upgraded')
         return redirect('profile')
+
 
 @user_login_required
 def upgrade(request):
@@ -350,7 +379,8 @@ def upgrade(request):
 
                 # Creating a subscription plan for the customer
                 plan = SubscriptionPlan.objects.get(membership_type='Premium')
-                subscription = create_subscription(customer.id, plan.stripe_plan_id)
+                subscription = create_subscription(
+                    customer.id, plan.stripe_plan_id)
 
                 profile = Profile.objects.get(id=user.id)
 
@@ -362,26 +392,32 @@ def upgrade(request):
                 user_subscription.stripe_subscription_id = subscription.id
                 user_subscription.save()
 
-                messages.info(request, f'Your plan has been upgraded to premium. Enjoy!!')
+                messages.info(
+                    request, f'Your plan has been upgraded to premium. Enjoy!!')
                 return redirect('profile')
             except stripe.error.APIConnectionError as e:
-                messages.warning(request, 'Sorry upgrade failed. Couldn\'t communicate with the payment gateway.')
+                messages.warning(
+                    request, 'Sorry upgrade failed. Couldn\'t communicate with the payment gateway.')
                 return redirect('profile')
             except stripe.error.RateLimitError as e:
-                messages.warning(request, 'Sorry upgrade failed. Internal Server error.')
+                messages.warning(
+                    request, 'Sorry upgrade failed. Internal Server error.')
                 return redirect('profile')
             except stripe.error.AuthenticationError as e:
-                messages.warning(request, 'Sorry upgrade failed. Internal Server error.')
+                messages.warning(
+                    request, 'Sorry upgrade failed. Internal Server error.')
                 return redirect('profile')
             except stripe.error.StripeError as e:
-                messages.warning(request, 'Sorry upgrade failed. Internal Server error.')
+                messages.warning(
+                    request, 'Sorry upgrade failed. Internal Server error.')
                 return redirect('profile')
     else:
         messages.info(request, f'You already have an subscription!!')
         return redirect('profile')
 
 
-#Cancel the subscription of the user
+# Cancels the subscription of the user
+# Delete the user subscription from Stripe
 @user_login_required
 def cancel_subscription(request):
     user = Profile.objects.get(id=request.user.id)
@@ -399,7 +435,8 @@ def cancel_subscription(request):
             user_sub.active = False
             user_sub.save()
 
-            free_plan = SubscriptionPlan.objects.filter(membership_type="Free").first()
+            free_plan = SubscriptionPlan.objects.filter(
+                membership_type="Free").first()
             user_subscription = UserSubscription.objects.get(user=user)
             user_subscription.subscription_plan = free_plan
             user_subscription.save()
@@ -407,23 +444,28 @@ def cancel_subscription(request):
             messages.info(request, "Successfully cancelled subscription")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         except stripe.error.APIConnectionError as e:
-            messages.warning(request, 'Sorry cancellation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry cancellation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.RateLimitError as e:
-            messages.inwarningfo(request, 'Sorry cancellation failed. Internal Server error.')
+            messages.inwarningfo(
+                request, 'Sorry cancellation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.AuthenticationError as e:
-            messages.warning(request, 'Sorry cancellation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry cancellation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.StripeError as e:
-            messages.warning(request, 'Sorry cancellation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry cancellation failed. Internal Server error.')
             return redirect('profile')
     else:
         messages.info(request, f'You don\'t have a premium plan')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-#Reactivate the subscription of the user
+# Reactivate the subscription of the user
+# Creates a new subscription in the stripe
 @user_login_required
 def reactivate_subscription(request):
     user = Profile.objects.get(id=request.user.id)
@@ -435,13 +477,16 @@ def reactivate_subscription(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         try:
-            premium_plan = SubscriptionPlan.objects.filter(membership_type="Premium").first()
+            premium_plan = SubscriptionPlan.objects.filter(
+                membership_type="Premium").first()
             # Creating a new subscription for the customer
-            subscription = create_subscription(user_sub.stripe_customer_id, premium_plan.stripe_plan_id) 
+            subscription = create_subscription(
+                user_sub.stripe_customer_id, premium_plan.stripe_plan_id)
 
             start_date_unix = subscription.start_date
             ts = int(start_date_unix)
-            start_date = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            start_date = datetime.utcfromtimestamp(
+                ts).strftime('%Y-%m-%d %H:%M:%S')
             print(start_date)
 
             user_sub.active = True
@@ -449,19 +494,24 @@ def reactivate_subscription(request):
             user_sub.stripe_subscription_id = subscription.id
             user_sub.save()
 
-            messages.info(request, "You subscription has been activated since %s" %(start_date))
+            messages.info(
+                request, "You subscription has been activated since %s" % (start_date))
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         except stripe.error.APIConnectionError as e:
-            messages.warning(request, 'Sorry activation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry activation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.RateLimitError as e:
-            messages.warning(request, 'Sorry activation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry activation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.AuthenticationError as e:
-            messages.warning(request, 'Sorry activation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry activation failed. Internal Server error.')
             return redirect('profile')
         except stripe.error.StripeError as e:
-            messages.warning(request, 'Sorry activation failed. Internal Server error.')
+            messages.warning(
+                request, 'Sorry activation failed. Internal Server error.')
             return redirect('profile')
 
     else:

@@ -1,5 +1,6 @@
-movie = document.getElementsByClassName('clickable');
+movie = document.getElementsByClassName('clickable'); // Getting the movie card element in the page.
 
+// Adding the clickable even listerner to every movie card element in the web page.
 for (var i = 0; i < movie.length; i++) {
     (function (index) {
         movie[index].addEventListener('click', function () {
@@ -12,16 +13,20 @@ for (var i = 0; i < movie.length; i++) {
     })(i)
 }
 
+// This shows the select genre form
 $('#genre-menu').click(function () {
     $('#genre-filter').show();
 });
 
+// This hides the select  genre form
 $('#exit-filter').click(function () {
     $('#genre-filter').hide();
 })
 
-var button = document.getElementsByClassName("menu");
+var button = document.getElementsByClassName("menu"); // selecing the 'cross' button of the movie card element
 
+// Adding the clickable event listender to every 'cross' button
+// On clicking the  button the movie card element is hidden
 for (var i = 0; i < button.length; i++) {
     (function (index) {
         button[index].addEventListener('click', function () {
@@ -36,6 +41,11 @@ for (var i = 0; i < button.length; i++) {
 var bookmark_icon = document.getElementsByClassName("fav-add-icon");
 var bookmarked_icon = document.getElementsByClassName("bookmarked_icon")
 
+
+/**
+ * This loop adds clickable event listener to every 'bookmark' icon
+ * The bookmark icon is toggled on clicking the icon.
+ */
 for (var i = 0; i < bookmark_icon.length; i++) {
     (function (index) {
         bookmark_icon[index].addEventListener('click', function () {
@@ -64,8 +74,13 @@ for (var i = 0; i < bookmark_icon.length; i++) {
     })(i)
 }
 
-fav_add = document.getElementsByClassName("fav-add");
+fav_add = document.getElementsByClassName("fav-add"); // This is the bookmark icon element
 
+/**
+ * This is jQuery portion of the JavaScript 
+ * When the user clicks the bookmark icon an AJAX request is sent to the backend
+ * On sucess an message is displayed on the webpage.
+ */
 $('.fav-add-icon').click(function () {
     $.ajax({
         url: $(this).attr("data-href"),

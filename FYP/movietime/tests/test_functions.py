@@ -8,8 +8,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 class MovieTimeModule(TestCase):
 
+    # The set up function configures the database and the data
     def setUp(self):
-        # self.client = Client()
 
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
@@ -52,6 +52,7 @@ class MovieTimeModule(TestCase):
         self.movie.favourite.add(1)
         self.movie.genre.add(1)
 
+    # This function tests if the search string is stored in the session variable
     def test_movie_search_string_session(self):
         movie_string = 'Avengers'
 

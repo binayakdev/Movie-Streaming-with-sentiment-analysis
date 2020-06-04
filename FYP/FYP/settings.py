@@ -25,18 +25,13 @@ SECRET_KEY = 'g*z60y!i)3)!@djw1y3!4$6yuwh%ud5j(jf4+%$xh28g*52_#q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'movietime.com'] # To view locally in mobile
+ALLOWED_HOSTS = ['localhost', 'movietime.com']  # To view locally in mobile
 
 # Email smtp setup
+# The SMTP servers runs locally in the command prompt
 
 EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'joshibinayak17@gmail.com'
-# EMAIL_HOST_PASSWORD = 'sc00per12'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = 1025  # port number of the local SMTP server.
 
 
 # Application definition
@@ -138,7 +133,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-#Loading the machine learning model
+# Loading the machine learning model
 MODEL = os.path.join(BASE_DIR, 'sentiment/model')
 
 # Static files (CSS, JavaScript, Images)
@@ -155,28 +150,25 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+# This is the user detail table
 AUTH_USER_MODEL = 'UserSettings.Profile'
 
+# Bootstrap template to style the Django form
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Defines the url that is to be directed towards from the login page
 LOGIN_REDIRECT_URL = '/'
 
-# Twitter consumer_key, consumer_secret, access_token, access_secret
-# TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
-# TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
-# TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN')
-# TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
 
-#STRIPE API
+# STRIPE API
 STRIPE_PUBLISHABLE_KEY = 'pk_test_vo1sgnjwmkZCwbpFP3GVgwuX00PWNMsFKa'
 STRIPE_SECRET_KEY = 'sk_test_oJR7E0t7ULXRcc6zZgppYy3N007vtktugN'
 
-#Twitter API
+# Twitter API
 # TWITTER_CONSUMER_KEY = 'xfKegt9EY0OMfPyCcsI4BaRQt'
 # TWITTER_CONSUMER_SECRET = 'oMHtTd0MIXgk1lvBNc6LSsjKCfpMCCU4iw9Q5Sa6QxXr6tp1x0'
 # TWITTER_ACCESS_TOKEN = '1167466348219228161-beaknYs7vwM4ZQUzj4jXPwQIVLCNSL'
 # TWITTER_ACCESS_TOKEN_SECRET = 'S24oBn12nolk9vYyNufro5pAfzLN8l8Mt1nzbqasPUs6f'
 
-#The Movie Database API
+# The Movie Database API
 TMDB_API_KEY = 'ff32818b1a8219ac0fe458ba2b15982d'

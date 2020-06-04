@@ -5,12 +5,15 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 
 
+# This the admin registration form
 class UserAdminRegisterForm(UserCreationForm):
 
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name',
                   'username', 'email']
+
+# This is the admin login form
 
 
 class CustomAdminChangeForm(UserChangeForm):
@@ -24,6 +27,8 @@ class CustomAdminChangeForm(UserChangeForm):
             'password': None,
         }
 
+# This is the admin password reset form that asks for the email
+
 
 class AdminPasswordResetForm(PasswordResetForm):
 
@@ -32,6 +37,7 @@ class AdminPasswordResetForm(PasswordResetForm):
         fields = ('email',)
 
 
+# This is the admin password reset form that asks for the new password
 class AdminPasswordResetConfirmForm(SetPasswordForm):
 
     class Meta:

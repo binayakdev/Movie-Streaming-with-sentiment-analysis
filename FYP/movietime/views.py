@@ -13,6 +13,10 @@ genres = None
 
 # Create your views here.
 
+'''
+This is the python decorator that checks is the user is authenticated or not.
+'''
+
 
 def user_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -31,16 +35,7 @@ def user_login_required(f):
     return wrap
 
 
-def handler404(request, *args, **kwargs):
-    return render(request, '404.html')
-
-
-def handler500(request, *args, **kwargs):
-    return render(request, '500.html')
-
 # This function renders the home page of the website
-
-
 def index(request):
     context = {
         'title': 'MovieTime: Watch your favorite movies and also analyze the movies with sentiment analysis',
@@ -66,10 +61,23 @@ def about(request):
     return render(request, 'movietime/about.html', context)
 
 
+'''
+This function uses the Django pagination
+It takes in a list of movies object and seperates the content in the webpage into discrete pages
+It returns the pages.
+'''
+
+
 def pagination(request, movie_list):
     paginator = Paginator(movie_list, 18)
     page = request.GET.get('page')
     return paginator.get_page(page)
+
+
+'''
+This functions checks if the list of movies are bookmarked
+If a movies is bookmarked the movie id is appended to a list and returned
+'''
 
 
 def is_bookmarked(request, movies):
@@ -79,6 +87,8 @@ def is_bookmarked(request, movies):
             if movie.favourite.filter(id=request.user.id).exists():
                 bookmarked.append(movie.id)
     return bookmarked
+
+# This functions renders the movie details page
 
 
 def movies(request):
@@ -116,6 +126,9 @@ def movies(request):
     return render(request, 'movietime/movies.html', context)
 
 
+# This functions returns the watch movie webpage
+# This is where the users streams their movie
+# The user needs to be authenticated in order to access this page.
 @user_login_required
 def watch_movies(request, id):
     movie = Movie.objects.get(id=id)
@@ -135,8 +148,9 @@ def watch_movies(request, id):
     }
     return render(request, 'movietime/watch_movies.html', context)
 
+#  This function filters the movies by the recent release date
 
-@user_login_required
+
 def recent_releases(request):
     movies = Movie.objects.all().order_by('-release_date')
     recent_releases = pagination(request, movies)
@@ -151,8 +165,9 @@ def recent_releases(request):
     }
     return render(request, 'movietime/movies.html', context)
 
+# This functions filters the movies in a chornological order (i.e. from A to Z)
 
-@user_login_required
+
 def chronological(request):
     movies = Movie.objects.all().order_by('title')
     chronological_movies = pagination(request, movies)
@@ -168,7 +183,7 @@ def chronological(request):
     return render(request, 'movietime/movies.html', context)
 
 
-@user_login_required
+# This functions filters the movies by their rating (hightest rated to lowest)
 def top_rated(request):
     movies = Movie.objects.all().order_by('-rating')
     top_rated_movies = pagination(request, movies)
@@ -183,8 +198,9 @@ def top_rated(request):
     }
     return render(request, 'movietime/movies.html', context)
 
+# This functions returns all the movies that falls on the selected genre category
 
-@user_login_required
+
 def by_genre(request):
     if request.method == 'GET' and 'page' not in request.GET:
         genres = request.GET.getlist('checks')
@@ -211,6 +227,9 @@ def by_genre(request):
     return render(request, 'movietime/movies.html', context)
 
 
+# This functions adds the movie to the favourite list
+# This function is called asynchronously using AJAX
+# It returns JSON response containing a message.
 @user_login_required
 def favourite_movie(request, id):
     movie = get_object_or_404(Movie, id=id)
@@ -227,7 +246,7 @@ def favourite_movie(request, id):
     data['success'] = True
     return JsonResponse(data, safe=False)
 
-
+# This function renders the page that shows all the favourite movies of the authenticated user.
 @user_login_required
 def list_favourites(request):
     movies = Movie.objects.all()

@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+# This is the profile details table
+# It extends from the base user details table that is provided by default in the framework
+
 
 class Profile(AbstractUser):
     avatar = models.ImageField(upload_to='avatar')
@@ -9,6 +12,8 @@ class Profile(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# This is the subscription details table
 
 
 class SubscriptionPlan(models.Model):
@@ -19,6 +24,8 @@ class SubscriptionPlan(models.Model):
 
     def __str__(self):
         return self.membership_type
+
+# This is the user subscription details table
 
 
 class UserSubscription(models.Model):

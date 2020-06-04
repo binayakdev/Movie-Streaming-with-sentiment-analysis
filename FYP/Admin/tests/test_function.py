@@ -5,6 +5,7 @@ from Admin.templatetags.timetags import timestamp
 
 class TemplateTest(SimpleTestCase):
 
+    # Testing the helper function (template tag) that converts unix time stamp to python datetime
     def test_templatetag_timestamp(self):
         print("\nTesting the timestamp function...\n")
         result = timestamp('1583575379')  # Unix timestamp

@@ -3,6 +3,7 @@ from django.urls import reverse, resolve
 from sentiment.views import analysis
 
 
+#  This test checks of the URL routes can be resolved to their corresponding view functions.
 class TestUrls(SimpleTestCase):
 
     def test_sentiment_analysis_url_is_resolved(self):

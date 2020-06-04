@@ -3,6 +3,8 @@ import datetime
 
 # Create your models here.
 
+# This is Movie details table
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
@@ -16,7 +18,9 @@ class Movie(models.Model):
     quality = models.CharField(max_length=10, default="HD")
     release_date = models.DateField(default=datetime.date.today)
     summary = models.TextField(blank=False, default="Nothing")
-    favourite = models.ManyToManyField("UserSettings.Profile", related_name='favourite', blank=True)
+    # This creates a many to many relation with the favourite table
+    favourite = models.ManyToManyField(
+        "UserSettings.Profile", related_name='favourite', blank=True)  # This creates a many to many relation with the User profile table
     genre = models.ManyToManyField("Genre", related_name='genre', blank=True)
     review_id = models.CharField(max_length=100)
 
@@ -25,6 +29,8 @@ class Movie(models.Model):
 
     class Meta:
         verbose_name_plural = "Movie"
+
+# This is the Genre table
 
 
 class Genre(models.Model):
@@ -35,6 +41,8 @@ class Genre(models.Model):
 
     class Meta:
         verbose_name_plural = "Genre"
+
+# This is the FAQ table
 
 
 class FAQ(models.Model):

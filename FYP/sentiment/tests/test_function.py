@@ -5,6 +5,11 @@ from collections import defaultdict
 
 class SentimentModule(SimpleTestCase):
 
+    '''
+    This function tests the machine learning classifier
+    This makes sure that estimator can predict the sentiment of the given text
+    '''
+
     def test_predict_function(self):
         print("\nTesting the predict function..\n")
 
@@ -16,6 +21,11 @@ class SentimentModule(SimpleTestCase):
         print(test_review_result)
 
         self.assertEquals(test_review_result, test_review_sentiment)
+
+    '''
+    This functon tests the entity classifier of Stanford
+    It checks of the classifier can identify the entitis and classify them
+    '''
 
     def test_entity_classfier_function(self):
         print("\nTesting the entity classifier..\n")
@@ -34,5 +44,4 @@ class SentimentModule(SimpleTestCase):
         print(entity_classifier_result)
 
         self.assertDictEqual(entity_classifier_result, entity)
-
 
